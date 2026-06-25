@@ -1,0 +1,92 @@
+/* =========================================================
+   Halaman Login SIM Klinik — layout split-screen (branding + form)
+   ========================================================= */
+*{box-sizing:border-box}
+body.login-page{margin:0;min-height:100vh;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:#0f2747;color:#1e293b}
+.login-split{display:grid;grid-template-columns:1.05fr 1fr;min-height:100vh}
+
+/* ---------- Panel kiri (branding) ---------- */
+.login-brand{position:relative;overflow:hidden;color:#eef4ff;
+  padding:48px 56px;display:flex;flex-direction:column;
+  background:linear-gradient(150deg,#10294c 0%,#16406e 48%,#0c2342 100%)}
+.login-brand::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;
+  right:-160px;bottom:-200px;background:radial-gradient(circle,rgba(59,130,246,.35),transparent 70%)}
+.login-brand::after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;
+  left:-120px;top:-120px;background:radial-gradient(circle,rgba(96,165,250,.18),transparent 70%)}
+.login-brand>*{position:relative;z-index:1}
+.lb-badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  padding:8px 16px;border-radius:40px;font-size:13px;font-weight:600;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18)}
+.lb-badge svg{width:16px;height:16px}
+.lb-title{font-size:40px;line-height:1.15;font-weight:800;margin:30px 0 18px;letter-spacing:-.5px}
+.lb-sub{font-size:15px;line-height:1.7;color:#bcd0ec;max-width:460px;margin:0 0 34px}
+.lb-features{display:flex;flex-direction:column;gap:14px;margin-top:auto}
+.lb-feat{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border-radius:14px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10)}
+.lb-feat-ico{flex:none;width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 6px 16px rgba(37,99,235,.4)}
+.lb-feat-ico svg{width:22px;height:22px;color:#fff}
+.lb-feat h4{margin:0 0 4px;font-size:15px;font-weight:700;color:#fff}
+.lb-feat p{margin:0;font-size:13px;line-height:1.55;color:#a9c1e2}
+.lb-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:34px;
+  padding-top:22px;border-top:1px solid rgba(255,255,255,.12)}
+.lb-foot-name{font-size:14px;font-weight:700;color:#fff}
+.lb-foot-name small{display:block;font-weight:400;font-size:12px;color:#9fb6d8;margin-top:2px}
+.lb-secure{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:40px;font-size:12.5px;font-weight:600;
+  color:#bbf7d0;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.3)}
+.lb-secure svg{width:15px;height:15px}
+
+/* ---------- Panel kanan (form) ---------- */
+.login-form-side{display:flex;align-items:center;justify-content:center;padding:40px 24px;
+  background:#f4f7fb;
+  background-image:radial-gradient(rgba(15,39,71,.05) 1px,transparent 1px);background-size:18px 18px}
+.login-card{width:100%;max-width:420px}
+.lc-logo{display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:22px;margin-bottom:30px;
+  box-shadow:0 10px 30px rgba(15,39,71,.06)}
+.lc-logo img{width:72px;height:72px;object-fit:contain}
+.lc-logo .lc-logo-name{margin-top:10px;font-size:18px;font-weight:800;color:#0f2747;letter-spacing:-.3px}
+.lc-logo .lc-logo-name span{color:#2563eb}
+.lc-logo .lc-logo-sub{font-size:12.5px;color:#64748b;margin-top:2px}
+.lc-welcome{text-align:center;font-size:30px;font-weight:800;color:#0f2747;margin:0 0 8px;
+  padding-top:14px;position:relative}
+.lc-welcome::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:54px;height:4px;border-radius:4px;background:linear-gradient(90deg,#3b82f6,#22c55e)}
+.lc-welcome-sub{text-align:center;font-size:14px;line-height:1.6;color:#64748b;margin:0 0 26px}
+.lc-alert{padding:11px 14px;border-radius:10px;font-size:13.5px;margin-bottom:18px;
+  background:#fef2f2;border:1px solid #fecaca;color:#b91c1c}
+.lc-alert.warn{background:#fffbeb;border-color:#fde68a;color:#92600a}
+.lc-field{margin-bottom:18px}
+.lc-field label{display:block;font-size:13.5px;font-weight:600;color:#334155;margin-bottom:7px}
+.lc-input{position:relative;display:flex;align-items:center}
+.lc-input>svg{position:absolute;left:14px;width:18px;height:18px;color:#94a3b8;pointer-events:none}
+.lc-input input{width:100%;padding:13px 14px 13px 42px;font-size:15px;color:#0f2747;
+  border:1.5px solid #e2e8f0;border-radius:11px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.lc-input input::placeholder{color:#9aa7b8}
+.lc-input input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.14)}
+.lc-eye{position:absolute;right:8px;left:auto;width:34px;height:34px;border:0;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;border-radius:8px;color:#94a3b8}
+.lc-eye:hover{background:#f1f5f9;color:#475569}
+.lc-eye svg{width:18px;height:18px}
+.lc-remember{display:flex;align-items:center;gap:9px;font-size:13.5px;color:#475569;margin-bottom:22px;cursor:pointer}
+.lc-remember input{width:17px;height:17px;accent-color:#2563eb;cursor:pointer}
+.lc-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px;font-size:15.5px;font-weight:700;color:#fff;border:0;border-radius:11px;cursor:pointer;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);box-shadow:0 10px 24px rgba(37,99,235,.35);
+  transition:transform .12s,box-shadow .12s}
+.lc-btn svg{width:18px;height:18px}
+.lc-btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(37,99,235,.45)}
+.lc-btn:active{transform:translateY(0)}
+.lc-note{display:flex;gap:10px;margin-top:22px;padding:13px 15px;border-radius:11px;font-size:12.5px;line-height:1.6;
+  color:#475569;background:#eef4fb;border:1px solid #dbe7f5}
+.lc-note svg{flex:none;width:17px;height:17px;color:#2563eb;margin-top:1px}
+.lc-foot{text-align:center;margin-top:26px;font-size:12px;color:#94a3b8;line-height:1.7}
+.lc-foot b{color:#475569}
+
+/* ---------- Responsif ---------- */
+@media (max-width:880px){
+  .login-split{grid-template-columns:1fr}
+  .login-brand{display:none}
+  .login-form-side{min-height:100vh}
+}
