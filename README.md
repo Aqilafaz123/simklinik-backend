@@ -2,6 +2,8 @@
 
 Laravel 13 API & server untuk SIM Klinik, termasuk modul legacy PHP.
 
+**Requirement:** PHP **8.4.1** atau lebih baru.
+
 ## Isi folder
 
 - `app/` — controllers, models, middleware, services
