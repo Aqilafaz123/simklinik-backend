@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/entities.php';
 require_role('superadmin');
-$pageTitle = 'Master Data';
+$pageTitle = t('pages.master_data');
 
 $all = master_entities();
 
@@ -56,12 +56,12 @@ require_once __DIR__ . '/../../includes/header.php';
 <div class="page-toolbar">
   <div>
     <div class="pt-title"><?= e($ent['label']) ?></div>
-    <div class="pt-sub">Master Data &middot; <?= e($activeGroup) ?></div>
+    <div class="pt-sub"><?= e(t('common.master_data_label')) ?> &middot; <?= e($activeGroup) ?></div>
   </div>
   <div class="pt-actions">
     <a class="btn" href="<?= legacy_url('modules/master/form.php?e=' . $activeSlug) ?>"
        data-modal-url="<?= legacy_url('modules/master/form.php?e=' . $activeSlug . '&modal=1') ?>"
-       data-modal-title="Tambah <?= e($ent['singular']) ?>"><?= app_icon('plus') ?> Tambah <?= e($ent['singular']) ?></a>
+       data-modal-title="<?= e(t('common.add_record', ['name' => $ent['singular']])) ?>"><?= app_icon('plus') ?> <?= e(t('common.add')) ?> <?= e($ent['singular']) ?></a>
   </div>
 </div>
 
@@ -80,7 +80,7 @@ require_once __DIR__ . '/../../includes/header.php';
     <thead>
       <tr>
         <?php foreach ($listFields as $f): ?><th><?= e($f['label']) ?></th><?php endforeach; ?>
-        <th class="no-sort col-actions">Aksi</th>
+        <th class="no-sort col-actions"><?= e(t('common.action')) ?></th>
       </tr>
     </thead>
     <tbody>
@@ -96,7 +96,7 @@ require_once __DIR__ . '/../../includes/header.php';
                     $map = fk_map($f['fk_table'], $f['fk_label']);
                     echo e($map[$val] ?? '-');
                 } elseif ($f['type'] === 'enum' && $key === 'status') {
-                    echo '<span class="badge ' . ($val === 'aktif' ? 'badge-green' : 'badge-gray') . '">' . e(ucfirst($val)) . '</span>';
+                    echo '<span class="badge ' . ($val === 'aktif' ? 'badge-green' : 'badge-gray') . '">' . e(active_status_label($val)) . '</span>';
                 } elseif ($f['type'] === 'readonly') {
                     echo '<code>' . e($val) . '</code>';
                 } else {
@@ -109,12 +109,12 @@ require_once __DIR__ . '/../../includes/header.php';
             <div class="cell-actions-inner">
             <a class="btn btn-sm btn-light" href="<?= legacy_url('modules/master/form.php?e=' . $activeSlug . '&id=' . $r['id']) ?>"
                data-modal-url="<?= legacy_url('modules/master/form.php?e=' . $activeSlug . '&id=' . $r['id'] . '&modal=1') ?>"
-               data-modal-title="Edit <?= e($ent['singular']) ?>">Edit</a>
-            <form method="post" onsubmit="return confirm('Hapus <?= e($ent['singular']) ?> ini?')">
+               data-modal-title="<?= e(t('common.edit_record', ['name' => $ent['singular']])) ?>"><?= e(t('common.edit')) ?></a>
+            <form method="post" onsubmit="return confirm(<?= json_encode(t('common.delete_confirm_entity', ['name' => $ent['singular']]), JSON_UNESCAPED_UNICODE) ?>)">
               <?= sim_csrf_field() ?>
               <input type="hidden" name="aksi" value="hapus">
               <input type="hidden" name="id" value="<?= (int) $r['id'] ?>">
-              <button class="btn btn-sm btn-red" type="submit">Hapus</button>
+              <button class="btn btn-sm btn-red" type="submit"><?= e(t('common.delete')) ?></button>
             </form>
             </div>
           </td>
@@ -129,8 +129,8 @@ require_once __DIR__ . '/../../includes/header.php';
 <div class="modal-overlay" id="dataModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="dataModalTitle">
     <div class="modal-head">
-      <div class="modal-title" id="dataModalTitle">Data</div>
-      <button type="button" class="modal-close" data-modal-close aria-label="Tutup">&times;</button>
+      <div class="modal-title" id="dataModalTitle"><?= e(t('common.data')) ?></div>
+      <button type="button" class="modal-close" data-modal-close aria-label="<?= e(t('common.close')) ?>">&times;</button>
     </div>
     <div class="modal-body" id="dataModalBody"></div>
   </div>
@@ -142,8 +142,8 @@ require_once __DIR__ . '/../../includes/header.php';
   var titleEl = document.getElementById('dataModalTitle');
 
   function open(url, title) {
-    titleEl.textContent = title || 'Data';
-    box.innerHTML = '<div class="modal-loading">Memuat…</div>';
+    titleEl.textContent = title || <?= json_encode(t('common.data'), JSON_UNESCAPED_UNICODE) ?>;
+    box.innerHTML = <?= json_encode('<div class="modal-loading">' . t('common.loading') . '</div>', JSON_UNESCAPED_UNICODE) ?>;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     fetch(url, { headers: { 'X-Requested-With': 'fetch' } })

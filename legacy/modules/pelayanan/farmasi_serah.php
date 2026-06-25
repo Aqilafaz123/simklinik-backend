@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('farmasi');
-$pageTitle = 'Penyerahan Obat';
+$pageTitle = t('pages.drug_dispense');
 $user = current_user();
 
 $resepId = (int) ($_GET['resep_id'] ?? $_POST['resep_id'] ?? 0);
@@ -68,7 +68,7 @@ $total = 0; foreach ($detail as $d) $total += $d['subtotal'];
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
-<a href="<?= legacy_url('modules/pelayanan/farmasi.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Kembali</a>
+<a href="<?= legacy_url('modules/pelayanan/farmasi.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.back')) ?></a>
 
 <div class="card" style="margin-top:14px">
   <div style="font-size:var(--fs-sub);font-weight:700"><?= e($resep['pasien']) ?></div>

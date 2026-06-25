@@ -21,7 +21,7 @@ $noAntrian = $k['poli_kode'] . '-' . str_pad($k['no_antrian'], 3, '0', STR_PAD_L
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kartu Antrian <?= e($noAntrian) ?></title>
+  <title><?= e(t('common.card')) ?> <?= e($noAntrian) ?></title>
   <style>
     body{font-family:'Segoe UI',Arial,sans-serif;background:#f1f5f9;display:flex;
       justify-content:center;padding:30px}
@@ -48,26 +48,26 @@ $noAntrian = $k['poli_kode'] . '-' . str_pad($k['no_antrian'], 3, '0', STR_PAD_L
 <body>
   <div class="ticket">
     <h2><?= app_icon('hospital') ?> <?= CLINIC_NAME ?></h2>
-    <div class="clinic">Kartu Antrian Pasien</div>
+    <div class="clinic"><?= e(t('common.queue_card')) ?></div>
     <hr>
-    <div class="label">NOMOR ANTRIAN</div>
+    <div class="label"><?= e(t('common.queue_number')) ?></div>
     <div class="antrian"><?= e($noAntrian) ?></div>
     <div class="label"><?= e($k['poli']) ?></div>
     <hr>
     <table>
-      <tr><td>No. Kunjungan</td><td><b><?= e($k['no_kunjungan']) ?></b></td></tr>
-      <tr><td>No. MR</td><td><?= e($k['no_mr']) ?></td></tr>
-      <tr><td>Pasien</td><td><?= e($k['pasien']) ?></td></tr>
-      <tr><td>Dokter</td><td><?= e($k['dokter'] ?? '-') ?></td></tr>
-      <tr><td>Penjamin</td><td><?= e(strtoupper($k['jenis_penjamin'])) ?></td></tr>
-      <tr><td>Tanggal</td><td><?= tgl_id($k['tgl_kunjungan']) ?></td></tr>
-      <tr><td>Jam Daftar</td><td><?= date('H:i', strtotime($k['created_at'])) ?></td></tr>
+      <tr><td><?= e(t('common.visit_no')) ?></td><td><b><?= e($k['no_kunjungan']) ?></b></td></tr>
+      <tr><td><?= e(t('common.mr_no')) ?></td><td><?= e($k['no_mr']) ?></td></tr>
+      <tr><td><?= e(t('app.patient')) ?></td><td><?= e($k['pasien']) ?></td></tr>
+      <tr><td><?= e(t('app.doctor')) ?></td><td><?= e($k['dokter'] ?? '-') ?></td></tr>
+      <tr><td><?= e(t('common.insurance')) ?></td><td><?= e(strtoupper($k['jenis_penjamin'])) ?></td></tr>
+      <tr><td><?= e(t('common.date')) ?></td><td><?= tgl_id($k['tgl_kunjungan']) ?></td></tr>
+      <tr><td><?= e(t('common.registered_at')) ?></td><td><?= date('H:i', strtotime($k['created_at'])) ?></td></tr>
     </table>
     <hr>
-    <div style="font-size:12px;color:#64748b">Mohon menunggu panggilan sesuai nomor antrian.</div>
+    <div style="font-size:12px;color:#64748b"><?= e(t('common.wait_message')) ?></div>
     <div class="actions">
-      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> Cetak</button>
-      <a class="btn-back" href="<?= legacy_url('modules/registrasi/index.php') ?>">Selesai</a>
+      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> <?= e(t('common.print')) ?></button>
+      <a class="btn-back" href="<?= legacy_url('modules/registrasi/index.php') ?>"><?= e(t('common.done')) ?></a>
     </div>
   </div>
 </body>

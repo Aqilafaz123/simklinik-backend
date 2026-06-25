@@ -4,7 +4,7 @@ require_role('registrasi', 'admin', 'superadmin');
 
 $id = (int) ($_GET['id'] ?? 0);
 $isEdit = $id > 0;
-$pageTitle = $isEdit ? 'Edit Pasien' : 'Pasien Baru';
+$pageTitle = $isEdit ? t('pages.patient_edit') : t('pages.patient_new');
 
 $kelompok = db()->query("SELECT id, nama FROM kelompok_pasien ORDER BY id")->fetchAll();
 
@@ -131,7 +131,7 @@ require_once __DIR__ . '/../../includes/header.php';
     <div class="pt-sub"><?= $isEdit ? 'No. MR: <b>' . e($data['no_mr']) . '</b>' : 'No. MR dibuat otomatis saat disimpan' ?></div>
   </div>
   <div class="pt-actions">
-    <a class="btn-back" href="<?= legacy_url('modules/registrasi/pasien.php') ?>"><?= app_icon('chevron') ?> Kembali</a>
+    <a class="btn-back" href="<?= legacy_url('modules/registrasi/pasien.php') ?>"><?= app_icon('chevron') ?> <?= e(t('common.back')) ?></a>
   </div>
 </div>
 
@@ -187,8 +187,8 @@ require_once __DIR__ . '/../../includes/header.php';
   <?php endforeach; ?>
 
   <div class="form-actions" style="position:sticky;bottom:0;background:var(--bg);padding:14px 0">
-    <a class="btn btn-light" href="<?= legacy_url('modules/registrasi/pasien.php') ?>">Batal</a>
-    <button class="btn" type="submit"><?= app_icon('save') ?> Simpan Pasien</button>
+    <a class="btn btn-light" href="<?= legacy_url('modules/registrasi/pasien.php') ?>"><?= e(t('common.cancel')) ?></a>
+    <button class="btn" type="submit"><?= app_icon('save') ?> <?= e(t('common.save_patient')) ?></button>
   </div>
 </form>
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

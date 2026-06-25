@@ -120,9 +120,9 @@ ob_start();
 
 <div class="form-actions" style="margin-top:6px">
   <?php if ($modal): ?>
-    <button type="button" class="btn btn-light" data-modal-close>Tutup</button>
+    <button type="button" class="btn btn-light" data-modal-close><?= e(t('common.close')) ?></button>
   <?php endif; ?>
-  <a class="btn" href="<?= legacy_url('modules/registrasi/pasien_form.php?id=' . $p['id']) ?>"><?= app_icon('pencil') ?> Edit Data</a>
+  <a class="btn" href="<?= legacy_url('modules/registrasi/pasien_form.php?id=' . $p['id']) ?>"><?= app_icon('pencil') ?> <?= e(t('common.edit')) ?></a>
 </div>
 <?php
 $body = ob_get_clean();
@@ -130,16 +130,16 @@ $body = ob_get_clean();
 if ($modal) { echo $body; exit; }
 
 // Mode halaman penuh
-$pageTitle = 'Detail Pasien';
+$pageTitle = t('pages.patient_detail');
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div class="page-toolbar">
   <div>
-    <div class="pt-title">Detail Pasien</div>
+    <div class="pt-title"><?= e(t('pages.patient_detail')) ?></div>
     <div class="pt-sub">No. MR: <b><?= e($p['no_mr']) ?></b></div>
   </div>
   <div class="pt-actions">
-    <a class="btn-back" href="<?= legacy_url('modules/registrasi/pasien.php') ?>"><?= app_icon('chevron') ?> Kembali</a>
+    <a class="btn-back" href="<?= legacy_url('modules/registrasi/pasien.php') ?>"><?= app_icon('chevron') ?> <?= e(t('common.back')) ?></a>
   </div>
 </div>
 <div class="card"><?= $body ?></div>

@@ -1,0 +1,38 @@
+/* Language picker — label & dropdown sejajar horizontal */
+.lang-picker{
+  display:inline-flex;flex-direction:row;align-items:center;justify-content:flex-start;
+  gap:10px;flex-wrap:nowrap;width:auto;max-width:100%}
+.lang-picker-label{
+  display:inline-block;flex:0 0 auto;width:auto;margin:0;padding:0;
+  font-size:14px;font-weight:600;color:#334155;white-space:nowrap;line-height:1;
+  cursor:default;vertical-align:middle}
+.lang-picker-select{
+  display:inline-block;flex:0 0 auto;width:152px;height:40px;margin:0;padding:0 36px 0 14px;
+  border:1.5px solid #3b82f6;border-radius:10px;background-color:#fff;
+  color:#0f172a;font-size:14px;font-weight:500;font-family:inherit;line-height:38px;
+  cursor:pointer;box-sizing:border-box;vertical-align:middle;
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:16px;
+  transition:border-color .15s,box-shadow .15s}
+.lang-picker-select:hover{border-color:#2563eb}
+.lang-picker-select:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.lang-picker-select option{color:#0f172a;background:#fff}
+
+/* Topbar */
+.topbar-right .lang-picker{flex-shrink:0}
+.topbar .lang-picker-label{color:var(--text,#334155)}
+.topbar .lang-picker-select{background-color:var(--card,#fff);color:var(--text,#0f172a);border-color:var(--primary,#3b82f6)}
+
+/* Halaman login — satu baris: Bahasa | [dropdown] */
+.login-lang-wrap{
+  display:flex;flex-direction:row;justify-content:flex-end;align-items:center;
+  width:100%;margin-bottom:18px}
+.login-lang-wrap .lang-picker{display:inline-flex;flex-direction:row;align-items:center}
+.login-lang-wrap .lang-picker-label{color:#475569}
+
+@media(max-width:480px){
+  .lang-picker{gap:8px}
+  .lang-picker-select{width:130px;font-size:13px}
+  .lang-picker-label{font-size:13px}
+}

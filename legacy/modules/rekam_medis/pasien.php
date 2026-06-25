@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('dokter', 'superadmin');
-$pageTitle = 'Rekam Medis Pasien';
+$pageTitle = t('pages.medical_records_patients');
 
 $pasienId = (int) ($_GET['pasien_id'] ?? 0);
 $p = db()->prepare("SELECT p.*, kp.nama AS kelompok FROM pasien p
@@ -40,7 +40,7 @@ $badge = ['menunggu' => 'badge-orange', 'periksa' => 'badge-blue', 'penunjang' =
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
-<a href="<?= legacy_url('modules/rekam_medis/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Daftar Pasien</a>
+<a href="<?= legacy_url('modules/rekam_medis/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.patient_list')) ?></a>
 
 <!-- Identitas -->
 <div class="card" style="margin-top:14px">
@@ -48,17 +48,17 @@ require_once __DIR__ . '/../../includes/header.php';
     <div>
       <div style="font-size:var(--fs-title);font-weight:700"><?= e($p['nama']) ?></div>
       <div style="color:var(--muted);margin-top:4px">
-        No. MR <b><?= e($p['no_mr']) ?></b> &middot; <?= $p['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>
+        No. MR <b><?= e($p['no_mr']) ?></b> &middot; <?= $p['jenis_kelamin'] === 'L' ? e(t('common.male')) : e(t('common.female')) ?>
         &middot; <?= $umur ?> &middot; <?= e($p['kelompok'] ?? 'Umum') ?>
       </div>
       <div style="color:var(--muted)">
         <?= tgl_id($p['tgl_lahir']) ?> &middot; <?= e($p['telepon'] ?? '-') ?>
-        <?php if ($p['gol_darah'] && $p['gol_darah'] !== '-'): ?> &middot; Gol. Darah <?= e($p['gol_darah']) ?><?php endif; ?>
+        <?php if ($p['gol_darah'] && $p['gol_darah'] !== '-'): ?> &middot; <?= e(t('common.blood_group')) ?> <?= e($p['gol_darah']) ?><?php endif; ?>
       </div>
       <?php if (!empty($p['alamat'])): ?><div style="color:var(--muted)"><?= e($p['alamat']) ?></div><?php endif; ?>
     </div>
     <div style="text-align:right">
-      <?php if (!empty($p['alergi'])): ?><span class="badge badge-red"><?= app_icon("alert") ?> Alergi: <?= e($p['alergi']) ?></span><?php endif; ?>
+      <?php if (!empty($p['alergi'])): ?><span class="badge badge-red"><?= app_icon("alert") ?> <?= e(t('common.allergy')) ?>: <?= e($p['alergi']) ?></span><?php endif; ?>
     </div>
   </div>
 </div>
@@ -66,7 +66,7 @@ require_once __DIR__ . '/../../includes/header.php';
 <!-- Riwayat diagnosa ringkas -->
 <?php if ($riwayatDiag): ?>
 <div class="card" style="margin-top:14px">
-  <h3 style="margin-bottom:10px">Riwayat Diagnosa</h3>
+  <h3 style="margin-bottom:10px"><?= e(t('common.diagnosis_history')) ?></h3>
   <div style="display:flex;flex-wrap:wrap;gap:8px">
     <?php foreach ($riwayatDiag as $d): ?>
       <span class="badge badge-blue"><?= $d['kode_icd10'] ? e($d['kode_icd10']) . ' — ' : '' ?><?= e($d['diagnosa']) ?></span>
@@ -76,11 +76,11 @@ require_once __DIR__ . '/../../includes/header.php';
 <?php endif; ?>
 
 <!-- Daftar kunjungan -->
-<div class="section-title">Riwayat Kunjungan (<?= count($kunjungan) ?>)</div>
+<div class="section-title"><?= e(t('common.visit_history')) ?> (<?= count($kunjungan) ?>)</div>
 <div class="table-wrap">
   <table class="datatable dt-noscroll" style="width:100%">
     <thead>
-      <tr><th>Tanggal</th><th>No. Kunjungan</th><th>Poli</th><th>Dokter</th><th>Diagnosa</th><th>Status</th><th class="col-actions">Aksi</th></tr>
+      <tr><th><?= e(t('common.date')) ?></th><th><?= e(t('common.visit_no')) ?></th><th><?= e(t('app.poli')) ?></th><th><?= e(t('app.doctor')) ?></th><th><?= e(t('common.diagnosis')) ?></th><th><?= e(t('app.status')) ?></th><th class="col-actions"><?= e(t('common.action')) ?></th></tr>
     </thead>
     <tbody>
       <?php foreach ($kunjungan as $k): ?>
@@ -90,8 +90,8 @@ require_once __DIR__ . '/../../includes/header.php';
           <td><?= e($k['poli']) ?></td>
           <td><?= e($k['dokter'] ?? '-') ?></td>
           <td><?= e($k['diagnosa'] ?? '-') ?></td>
-          <td><span class="badge <?= $badge[$k['status']] ?? 'badge-gray' ?>"><?= e(ucfirst($k['status'])) ?></span></td>
-          <td class="cell-actions"><div class="cell-actions-inner"><a class="btn btn-sm" href="<?= legacy_url('modules/rekam_medis/detail.php?kunjungan_id=' . $k['id']) ?>">Lihat Detail</a></div></td>
+          <td><span class="badge <?= $badge[$k['status']] ?? 'badge-gray' ?>"><?= e(status_label($k['status'])) ?></span></td>
+          <td class="cell-actions"><div class="cell-actions-inner"><a class="btn btn-sm" href="<?= legacy_url('modules/rekam_medis/detail.php?kunjungan_id=' . $k['id']) ?>"><?= e(t('common.view_detail')) ?></a></div></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

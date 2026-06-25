@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('dokter', 'superadmin');
-$pageTitle = 'Detail Rekam Medis';
+$pageTitle = t('pages.medical_record_detail');
 
 $kunjunganId = (int) ($_GET['kunjungan_id'] ?? 0);
 $kj = db()->prepare(
@@ -39,8 +39,8 @@ $umur = $kj['tgl_lahir'] ? (int) ((time() - strtotime($kj['tgl_lahir'])) / 31556
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div style="display:flex;justify-content:space-between;align-items:center">
-  <a href="<?= legacy_url('modules/rekam_medis/pasien.php?pasien_id=' . $kj['pasien_id']) ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Riwayat Pasien</a>
-  <button class="btn btn-light btn-sm" onclick="window.print()"><?= app_icon("print") ?> Cetak</button>
+  <a href="<?= legacy_url('modules/rekam_medis/pasien.php?pasien_id=' . $kj['pasien_id']) ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.patient_history')) ?></a>
+  <button class="btn btn-light btn-sm" onclick="window.print()"><?= app_icon("print") ?> <?= e(t('common.print')) ?></button>
 </div>
 
 <div class="card" style="margin-top:14px">
@@ -52,7 +52,7 @@ require_once __DIR__ . '/../../includes/header.php';
     </div>
     <div style="text-align:right">
       <span class="badge badge-blue"><?= e($kj['no_kunjungan']) ?></span>
-      <?php if (!empty($kj['alergi'])): ?><br><span class="badge badge-red" style="margin-top:6px"><?= app_icon("alert") ?> Alergi: <?= e($kj['alergi']) ?></span><?php endif; ?>
+      <?php if (!empty($kj['alergi'])): ?><br><span class="badge badge-red" style="margin-top:6px"><?= app_icon("alert") ?> <?= e(t('common.allergy')) ?>: <?= e($kj['alergi']) ?></span><?php endif; ?>
     </div>
   </div>
 </div>
@@ -63,7 +63,7 @@ require_once __DIR__ . '/../../includes/header.php';
 
 <!-- Vital sign -->
 <div class="card" style="margin-top:14px">
-  <h3 style="margin-bottom:10px">Tanda Vital</h3>
+  <h3 style="margin-bottom:10px"><?= e(t('common.vital_signs')) ?></h3>
   <div style="display:flex;flex-wrap:wrap;gap:24px;color:var(--muted)">
     <div>Tekanan Darah<br><b style="color:var(--text);font-size:16px"><?= e($rm['tekanan_darah'] ?: '-') ?></b></div>
     <div>Suhu<br><b style="color:var(--text);font-size:16px"><?= e($rm['suhu'] ?: '-') ?> °C</b></div>
@@ -93,7 +93,7 @@ require_once __DIR__ . '/../../includes/header.php';
     <h3 style="margin-bottom:10px">Diagnosa (ICD-10)</h3>
     <?php if (!$diag): ?><p style="color:var(--muted)">-</p><?php else: foreach ($diag as $d): ?>
       <div style="padding:6px 0;border-bottom:1px solid var(--border)">
-        <span class="badge <?= $d['jenis'] === 'primer' ? 'badge-blue' : 'badge-gray' ?>"><?= e(ucfirst($d['jenis'])) ?></span>
+        <span class="badge <?= $d['jenis'] === 'primer' ? 'badge-blue' : 'badge-gray' ?>"><?= e(diagnosis_type_label($d['jenis'])) ?></span>
         <?= $d['kode_icd10'] ? '<code>' . e($d['kode_icd10']) . '</code> ' : '' ?><?= e($d['diagnosa']) ?>
       </div>
     <?php endforeach; endif; ?>

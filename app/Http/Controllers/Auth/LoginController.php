@@ -42,7 +42,7 @@ class LoginController extends Controller
 
         return back()
             ->withInput($request->only('username'))
-            ->withErrors(['username' => 'Username atau password salah.']);
+            ->withErrors(['username' => __('app.login_failed')]);
     }
 
     public function logout(Request $request): RedirectResponse

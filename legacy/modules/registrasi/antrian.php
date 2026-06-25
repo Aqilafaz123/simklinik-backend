@@ -57,7 +57,7 @@ foreach ($rows->fetchAll() as $r) {
               <?= e($r['kode']) ?>-<?= str_pad($r['no_antrian'], 3, '0', STR_PAD_LEFT) ?>
             </span>
             <span class="nama"><?= e($r['pasien']) ?></span>
-            <span class="badge <?= $r['status'] === 'periksa' ? 'on' : '' ?>"><?= e(ucfirst($r['status'])) ?></span>
+            <span class="badge <?= $r['status'] === 'periksa' ? 'on' : '' ?>"><?= e(status_label($r['status'])) ?></span>
           </div>
         <?php endforeach; ?>
       </div>

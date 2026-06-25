@@ -198,7 +198,7 @@ $penjaminLabel = (function () use ($inv) {
     <div class="foot">* Payment is deemed valid if receipt sealed by the cashier is issued</div>
 
     <div class="actions">
-      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> Cetak</button>
+      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> <?= e(t('common.print')) ?></button>
       <a class="btn-back" href="<?= legacy_url('modules/keuangan/index.php') ?>">Selesai</a>
     </div>
   </div>

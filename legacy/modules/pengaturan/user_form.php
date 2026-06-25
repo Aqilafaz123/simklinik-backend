@@ -5,7 +5,7 @@ require_role('superadmin');
 
 $id = (int) ($_GET['id'] ?? 0);
 $isEdit = $id > 0;
-$pageTitle = $isEdit ? 'Edit Pengguna' : 'Tambah Pengguna';
+$pageTitle = $isEdit ? t('common.edit_user') : t('common.add_user');
 
 // Mode modal: hanya kirim potongan form (tanpa header/sidebar), submit via fetch
 $modal = isset($_GET['modal']);
@@ -135,11 +135,11 @@ if (!$modal):
     </div>
 
     <div class="form-actions">
-      <button class="btn" type="submit"><?= app_icon("save") ?> Simpan</button>
+      <button class="btn" type="submit"><?= app_icon("save") ?> <?= e(t('common.save')) ?></button>
       <?php if ($modal): ?>
-        <button type="button" class="btn btn-light" data-modal-close>Batal</button>
+        <button type="button" class="btn btn-light" data-modal-close><?= e(t('common.cancel')) ?></button>
       <?php else: ?>
-        <a class="btn btn-light" href="<?= legacy_url('modules/pengaturan/users.php') ?>">Batal</a>
+        <a class="btn btn-light" href="<?= legacy_url('modules/pengaturan/users.php') ?>"><?= e(t('common.cancel')) ?></a>
       <?php endif; ?>
     </div>
   </form>

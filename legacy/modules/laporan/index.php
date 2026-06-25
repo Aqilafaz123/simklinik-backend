@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/reports.php';
 require_login();
-$pageTitle = 'Laporan';
+$pageTitle = t('pages.reports');
 $role = current_role();
 
 // rentang default: awal bulan s/d hari ini
@@ -21,8 +21,8 @@ $namaGrupList = array_keys($grupLaporan);
 // Role tanpa laporan apa pun -> tampilkan pesan kosong.
 if (!$namaGrupList) {
     require_once __DIR__ . '/../../includes/header.php';
-    echo '<div class="page-toolbar"><div><div class="pt-title">Laporan</div>'
-       . '<div class="pt-sub">Belum ada laporan yang tersedia untuk role Anda.</div></div></div>';
+    echo '<div class="page-toolbar"><div><div class="pt-title">' . e(t('pages.reports')) . '</div>'
+       . '<div class="pt-sub">' . e(t('common.reports_empty')) . '</div></div></div>';
     require_once __DIR__ . '/../../includes/footer.php';
     exit;
 }
@@ -56,14 +56,14 @@ foreach ($grupLaporan[$activeGroup] as $s => $r) {
 
 $qs = 'jenis=' . urlencode($activeSlug) . '&dari=' . urlencode($dari) . '&sampai=' . urlencode($sampai);
 
-$pageTitle = 'Laporan ' . $activeGroup;
+$pageTitle = t('pages.reports_group', ['group' => $activeGroup]);
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div class="page-toolbar">
   <div>
-    <div class="pt-title">Laporan &mdash; <?= e($activeGroup) ?></div>
-    <div class="pt-sub">Pilih jenis laporan, lalu tentukan rentang tanggalnya.</div>
+    <div class="pt-title"><?= e(t('pages.reports_group', ['group' => $activeGroup])) ?></div>
+    <div class="pt-sub"><?= e(t('common.reports_sub')) ?></div>
   </div>
 </div>
 
@@ -82,18 +82,18 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="panel-toolbar">
     <form method="get" class="report-filter no-print">
       <input type="hidden" name="jenis" value="<?= e($activeSlug) ?>">
-      <div class="form-group" style="margin:0"><label>Dari</label><input type="date" name="dari" value="<?= e($dari) ?>" class="form-control" onchange="this.form.submit()"></div>
-      <div class="form-group" style="margin:0"><label>Sampai</label><input type="date" name="sampai" value="<?= e($sampai) ?>" class="form-control" onchange="this.form.submit()"></div>
+      <div class="form-group" style="margin:0"><label><?= e(t('common.from_date')) ?></label><input type="date" name="dari" value="<?= e($dari) ?>" class="form-control" onchange="this.form.submit()"></div>
+      <div class="form-group" style="margin:0"><label><?= e(t('common.to_date')) ?></label><input type="date" name="sampai" value="<?= e($sampai) ?>" class="form-control" onchange="this.form.submit()"></div>
     </form>
     <div class="report-actions no-print">
-      <a class="btn btn-light" href="<?= legacy_url('modules/laporan/export.php?' . $qs) ?>"><?= app_icon('download') ?> Export CSV</a>
-      <button type="button" class="btn btn-light" onclick="window.print()"><?= app_icon('print') ?> Cetak</button>
+      <a class="btn btn-light" href="<?= legacy_url('modules/laporan/export.php?' . $qs) ?>"><?= app_icon('download') ?> <?= e(t('common.export_csv')) ?></a>
+      <button type="button" class="btn btn-light" onclick="window.print()"><?= app_icon('print') ?> <?= e(t('common.print')) ?></button>
     </div>
   </div>
 
   <div class="print-head" style="display:none">
     <h2><?= CLINIC_NAME ?> — <?= e($cfg['label']) ?></h2>
-    <p>Periode: <?= tgl_id($dari) ?> s/d <?= tgl_id($sampai) ?></p>
+    <p><?= e(t('common.period')) ?>: <?= tgl_id($dari) ?> <?= e(t('common.period_to')) ?> <?= tgl_id($sampai) ?></p>
   </div>
 
   <table class="datatable dt-noscroll<?= in_array($activeSlug, ['kunjungan', 'poli'], true) ? ' no-auto-num' : '' ?>" style="width:100%">
@@ -116,7 +116,7 @@ require_once __DIR__ . '/../../includes/header.php';
       <tr class="report-total-row">
         <?php $first = true; foreach ($cfg['cols'] as $key => $c): ?>
           <?php if ($first): $first = false; ?>
-            <td>TOTAL</td>
+            <td><?= e(t('common.total')) ?></td>
           <?php elseif (in_array($key, $cfg['sum'], true)): ?>
             <td style="text-align:right"><?= laporan_cell_html($totals[$key], $c[1]) ?></td>
           <?php else: ?>

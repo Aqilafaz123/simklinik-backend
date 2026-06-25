@@ -10,7 +10,7 @@ if (!$ent) { set_flash('danger', 'Entitas tidak dikenal.'); legacy_redirect('mod
 
 $id = (int) ($_GET['id'] ?? 0);
 $isEdit = $id > 0;
-$pageTitle = ($isEdit ? 'Edit ' : 'Tambah ') . $ent['singular'];
+$pageTitle = ($isEdit ? t('common.edit_record', ['name' => $ent['singular']]) : t('common.add_record', ['name' => $ent['singular']]));
 
 // Mode modal: hanya kirim potongan form (tanpa header/sidebar), submit via fetch
 $modal = isset($_GET['modal']);
@@ -99,10 +99,10 @@ if (!$modal):
 <div class="page-toolbar">
   <div>
     <div class="pt-title"><?= e($pageTitle) ?></div>
-    <div class="pt-sub">Master Data &middot; <?= e($ent['label']) ?></div>
+    <div class="pt-sub"><?= e(t('common.master_data_label')) ?> &middot; <?= e($ent['label']) ?></div>
   </div>
   <div class="pt-actions">
-    <a class="btn-back" href="<?= legacy_url('modules/master/index.php?e=' . $slug) ?>"><?= app_icon('chevron') ?> Kembali ke <?= e($ent['label']) ?></a>
+    <a class="btn-back" href="<?= legacy_url('modules/master/index.php?e=' . $slug) ?>"><?= app_icon('chevron') ?> <?= e(t('common.back_to_entity', ['name' => $ent['label']])) ?></a>
   </div>
 </div>
 <div class="card" style="max-width:760px;margin-top:16px">
@@ -123,7 +123,7 @@ if (!$modal):
       <div class="form-group<?= $full ? ' fg-full' : '' ?>">
         <label><?= e($f['label']) ?><?= !empty($f['required']) ? '<span class="req">*</span>' : '' ?></label>
         <?php if ($f['type'] === 'readonly'): ?>
-          <input class="form-control" value="<?= $isEdit ? e($val) : '(otomatis saat simpan)' ?>" disabled
+          <input class="form-control" value="<?= $isEdit ? e($val) : e(t('common.auto_on_save')) ?>" disabled
                  style="background:var(--bg);color:var(--muted)">
 
         <?php elseif ($f['type'] === 'textarea'): ?>
@@ -132,14 +132,14 @@ if (!$modal):
         <?php elseif ($f['type'] === 'enum'): ?>
           <select class="form-control" name="<?= $key ?>">
             <?php foreach ($f['options'] as $opt): ?>
-              <option value="<?= e($opt) ?>" <?= (string) $val === (string) $opt ? 'selected' : '' ?>><?= e(ucfirst($opt)) ?></option>
+              <option value="<?= e($opt) ?>" <?= (string) $val === (string) $opt ? 'selected' : '' ?>><?= e($key === 'status' ? active_status_label($opt) : ucfirst($opt)) ?></option>
             <?php endforeach; ?>
           </select>
 
         <?php elseif ($f['type'] === 'fk'): ?>
           <?php $map = fk_map($f['fk_table'], $f['fk_label']); ?>
           <select class="form-control" name="<?= $key ?>" <?= !empty($f['required']) ? 'required' : '' ?>>
-            <option value="">- Pilih -</option>
+            <option value=""><?= e(t('common.select_option')) ?></option>
             <?php foreach ($map as $optId => $optLbl): ?>
               <option value="<?= $optId ?>" <?= (string) $val === (string) $optId ? 'selected' : '' ?>><?= e($optLbl) ?></option>
             <?php endforeach; ?>
@@ -171,11 +171,11 @@ if (!$modal):
     </div>
 
     <div class="form-actions">
-      <button class="btn" type="submit"><?= app_icon('save') ?> Simpan</button>
+      <button class="btn" type="submit"><?= app_icon('save') ?> <?= e(t('common.save')) ?></button>
       <?php if ($modal): ?>
-        <button type="button" class="btn btn-light" data-modal-close>Batal</button>
+        <button type="button" class="btn btn-light" data-modal-close><?= e(t('common.cancel')) ?></button>
       <?php else: ?>
-        <a class="btn btn-light" href="<?= legacy_url('modules/master/index.php?e=' . $slug) ?>">Batal</a>
+        <a class="btn btn-light" href="<?= legacy_url('modules/master/index.php?e=' . $slug) ?>"><?= e(t('common.cancel')) ?></a>
       <?php endif; ?>
     </div>
   </form>

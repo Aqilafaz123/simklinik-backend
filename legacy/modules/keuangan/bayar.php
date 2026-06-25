@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/keuangan_lib.php';
 require_role('kasir', 'admin', 'superadmin');
-$pageTitle = 'Pembayaran';
+$pageTitle = t('pages.payment');
 $user = current_user();
 
 $kunjunganId = (int) ($_GET['kunjungan_id'] ?? $_POST['kunjungan_id'] ?? 0);
@@ -96,7 +96,7 @@ $pmts = $pmts->fetchAll();
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
-<a href="<?= legacy_url('modules/keuangan/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Kembali</a>
+<a href="<?= legacy_url('modules/keuangan/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.back')) ?></a>
 
 <div class="pay-page">
 
@@ -116,7 +116,7 @@ require_once __DIR__ . '/../../includes/header.php';
     </div>
     <div class="bd-hero-side">
       <div class="bd-kunjungan">Invoice <?= e($invoice['no_invoice']) ?></div>
-      <span class="badge <?= $isLunas ? 'badge-green' : 'badge-orange' ?>"><?= $isLunas ? 'LUNAS' : 'Belum Lunas' ?></span>
+      <span class="badge <?= $isLunas ? 'badge-green' : 'badge-orange' ?>"><?= $isLunas ? e(t('common.paid_full')) : e(t('common.unpaid')) ?></span>
     </div>
   </div>
 
@@ -140,15 +140,15 @@ require_once __DIR__ . '/../../includes/header.php';
     <div class="pay-card">
       <div class="pay-card-title"><?= app_icon('billing') ?> Ringkasan Tagihan</div>
       <div class="pay-sum-rows">
-        <div class="bd-sum-row"><span>Total Tagihan</span><b><?= rupiah($invoice['total']) ?></b></div>
-        <div class="bd-sum-row"><span>Sudah Dibayar</span><b style="color:var(--green)"><?= rupiah($invoice['terbayar']) ?></b></div>
+        <div class="bd-sum-row"><span><?= e(t('common.total_bill')) ?></span><b><?= rupiah($invoice['total']) ?></b></div>
+        <div class="bd-sum-row"><span><?= e(t('common.already_paid')) ?></span><b style="color:var(--green)"><?= rupiah($invoice['terbayar']) ?></b></div>
       </div>
       <div class="pay-sisa <?= $sisa > 0 ? 'owe' : 'paid' ?>">
         <div class="lbl">Sisa Tagihan</div>
         <div class="val"><?= rupiah($sisa) ?></div>
       </div>
       <?php if ($isLunas): ?>
-        <a class="btn btn-green" target="_blank" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $invoice['id']) ?>"><?= app_icon("print") ?> Cetak Struk</a>
+        <a class="btn btn-green" target="_blank" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $invoice['id']) ?>"><?= app_icon("print") ?> <?= e(t('common.print_receipt')) ?></a>
       <?php endif; ?>
     </div>
 
@@ -187,7 +187,7 @@ require_once __DIR__ . '/../../includes/header.php';
           </select>
         </div>
         <div class="form-group">
-          <label>Jumlah Bayar</label>
+          <label><?= e(t('common.payment_amount')) ?></label>
           <input type="number" min="0" step="any" name="jumlah" class="form-control" value="<?= (int) $sisa ?>">
         </div>
         <div class="form-group" id="boxBukti" style="display:none">
@@ -195,10 +195,10 @@ require_once __DIR__ . '/../../includes/header.php';
           <input type="file" name="bukti" class="form-control" accept=".jpg,.jpeg,.png,.pdf">
         </div>
         <div class="form-group">
-          <label>Keterangan</label>
+          <label><?= e(t('common.notes')) ?></label>
           <input type="text" name="keterangan" class="form-control">
         </div>
-        <button type="submit" class="btn btn-green" style="width:100%;justify-content:center"><?= app_icon("check") ?> Simpan Pembayaran</button>
+        <button type="submit" class="btn btn-green" style="width:100%;justify-content:center"><?= app_icon("check") ?> <?= e(t('common.save_payment')) ?></button>
       </form>
       <?php endif; ?>
     </div>
@@ -209,7 +209,7 @@ require_once __DIR__ . '/../../includes/header.php';
     <div class="pay-card-title"><?= app_icon('clock') ?> Riwayat Pembayaran</div>
     <div class="bd-table-wrap">
       <table class="bd-table">
-        <thead><tr><th>Waktu</th><th>Metode</th><th>Bank</th><th class="num">Jumlah</th><th>Bukti</th><th>Kasir</th></tr></thead>
+        <thead><tr><th><?= e(t('common.time')) ?></th><th><?= e(t('common.payment_method')) ?></th><th>Bank</th><th class="num"><?= e(t('common.amount')) ?></th><th>Bukti</th><th>Kasir</th></tr></thead>
         <tbody>
           <?php if (!$pmts): ?>
             <tr><td colspan="6" class="bd-empty">Belum ada pembayaran.</td></tr>

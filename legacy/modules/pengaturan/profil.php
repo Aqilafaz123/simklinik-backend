@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('superadmin');
-$pageTitle = 'Profil Klinik';
+$pageTitle = t('pages.clinic_profile');
 
-$keys = ['clinic_name' => 'Nama Klinik', 'clinic_unit' => 'Unit / Cabang', 'clinic_address' => 'Alamat'];
+$keys = ['clinic_name', 'clinic_unit', 'clinic_address'];
 
 $val = [];
-foreach ($keys as $k => $_) {
+foreach ($keys as $k) {
     $s = db()->prepare("SELECT v FROM setting WHERE k=?"); $s->execute([$k]);
     $val[$k] = $s->fetchColumn() ?: '';
 }
@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $info = @getimagesize($f['tmp_name']);
         $mime = $info['mime'] ?? '';
         if (!isset($allowed[$mime])) {
-            $errors[] = 'Format logo harus PNG, JPG, WEBP, atau GIF.';
+            $errors[] = t('common.err_logo_format');
         } elseif ($f['size'] > 20 * 1024 * 1024) {
-            $errors[] = 'Ukuran logo maksimal 20 MB.';
+            $errors[] = t('common.err_logo_size');
         } else {
             if (!is_dir(UPLOAD_PATH)) @mkdir(UPLOAD_PATH, 0775, true);
             $newName = 'clinic_logo_' . time() . '.' . $allowed[$mime];
@@ -38,18 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($logo && is_file(upload_fs_path($logo))) @unlink(upload_fs_path($logo));
                 $logo = 'uploads/' . $newName;
             } else {
-                $errors[] = 'Gagal mengunggah logo.';
+                $errors[] = t('common.err_logo_upload');
             }
         }
     }
 
     if (!$errors) {
-        foreach ($keys as $k => $_) {
+        foreach ($keys as $k) {
             $val[$k] = trim($_POST[$k] ?? '');
             $upsert->execute([$k, $val[$k]]);
         }
         $upsert->execute(['clinic_logo', $logo]);
-        set_flash('success', 'Profil klinik berhasil disimpan. Perubahan langsung tampil di struk & header.');
+        set_flash('success', t('common.clinic_profile_saved'));
         legacy_redirect('modules/pengaturan/profil.php');
     }
 }
@@ -58,8 +58,8 @@ require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div class="page-toolbar">
   <div>
-    <div class="pt-title">Profil Klinik</div>
-    <div class="pt-sub">Identitas ini tampil di struk pembayaran, kartu antrian, dan header aplikasi.</div>
+    <div class="pt-title"><?= e(t('pages.clinic_profile')) ?></div>
+    <div class="pt-sub"><?= e(t('common.clinic_profile_sub')) ?></div>
   </div>
 </div>
 
@@ -73,9 +73,9 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="pf-hero" style="margin-top:18px">
     <div class="pf-cover"></div>
     <div class="pf-body">
-      <div class="pf-avatar-wrap" onclick="document.getElementById('logoInput').click()" title="Ganti logo">
+      <div class="pf-avatar-wrap" onclick="document.getElementById('logoInput').click()" title="<?= e(t('common.change_logo')) ?>">
         <?php if ($logo): ?>
-          <img src="<?= legacy_url($logo) ?>" id="logoPreview" class="pf-avatar pf-logo" alt="Logo Klinik">
+          <img src="<?= legacy_url($logo) ?>" id="logoPreview" class="pf-avatar pf-logo" alt="<?= e(t('common.clinic_logo')) ?>">
         <?php else: ?>
           <span class="pf-avatar pf-avatar-initial pf-logo" id="logoPreview" style="background:linear-gradient(135deg,#6366f1,#2563eb)"><?= app_icon("hospital") ?></span>
         <?php endif; ?>
@@ -88,7 +88,7 @@ require_once __DIR__ . '/../../includes/header.php';
         </div>
         <div class="pf-meta">
           <?= app_icon("hospital") ?>
-          <?= $val['clinic_address'] ? e($val['clinic_address']) : 'Alamat belum diatur' ?>
+          <?= $val['clinic_address'] ? e($val['clinic_address']) : e(t('common.address_not_set')) ?>
         </div>
       </div>
     </div>
@@ -98,22 +98,22 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="card" style="margin-top:16px">
     <div class="step-head">
       <div class="step-num acc-blue"><?= app_icon("hospital") ?></div>
-      <div><div class="st-title">Identitas Klinik</div><div class="st-sub">Nama, unit, alamat &amp; logo</div></div>
+      <div><div class="st-title"><?= e(t('common.clinic_identity_title')) ?></div><div class="st-sub"><?= e(t('common.clinic_identity_sub')) ?></div></div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label>Nama Klinik</label>
-        <input type="text" name="clinic_name" class="form-control" value="<?= e($val['clinic_name']) ?>" placeholder="cth: Klinik Sehat Sentosa">
+        <label><?= e(t('common.clinic_name')) ?></label>
+        <input type="text" name="clinic_name" class="form-control" value="<?= e($val['clinic_name']) ?>" placeholder="<?= e(t('common.clinic_name_placeholder')) ?>">
       </div>
       <div class="form-group">
-        <label>Unit / Cabang</label>
-        <input type="text" name="clinic_unit" class="form-control" value="<?= e($val['clinic_unit']) ?>" placeholder="cth: Cabang Pusat">
+        <label><?= e(t('common.clinic_unit')) ?></label>
+        <input type="text" name="clinic_unit" class="form-control" value="<?= e($val['clinic_unit']) ?>" placeholder="<?= e(t('common.clinic_unit_placeholder')) ?>">
       </div>
     </div>
     <div class="form-group">
-      <label>Alamat</label>
-      <textarea name="clinic_address" class="form-control" rows="3" placeholder="Alamat lengkap klinik"><?= e($val['clinic_address']) ?></textarea>
+      <label><?= e(t('common.clinic_address')) ?></label>
+      <textarea name="clinic_address" class="form-control" rows="3" placeholder="<?= e(t('common.clinic_address_placeholder')) ?>"><?= e($val['clinic_address']) ?></textarea>
     </div>
     <!-- <div class="form-group">
       <label>Logo Klinik</label>
@@ -127,7 +127,7 @@ require_once __DIR__ . '/../../includes/header.php';
     </div> -->
 
     <div style="display:flex;justify-content:flex-end;border-top:1px solid var(--border);margin-top:6px;padding-top:16px">
-      <button class="btn" type="submit"><?= app_icon("save") ?> Simpan Profil</button>
+      <button class="btn" type="submit"><?= app_icon("save") ?> <?= e(t('common.save_profile')) ?></button>
     </div>
   </div>
 </form>
@@ -145,7 +145,7 @@ require_once __DIR__ . '/../../includes/header.php';
     var img = document.createElement('img');
     img.id = 'logoPreview';
     img.className = 'pf-avatar pf-logo';
-    img.alt = 'Pratinjau Logo';
+    img.alt = <?= json_encode(t('common.logo_preview'), JSON_UNESCAPED_UNICODE) ?>;
     img.src = url;
     if (el) el.replaceWith(img);
   });

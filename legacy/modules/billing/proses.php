@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/billing_lib.php';
 require_role('kasir', 'admin', 'superadmin');
-$pageTitle = 'Proses Billing';
+$pageTitle = t('pages.billing_process');
 
 $kunjunganId = (int) ($_GET['kunjungan_id'] ?? $_POST['kunjungan_id'] ?? 0);
 
@@ -102,7 +102,7 @@ $kodeBatalList = db()->query("SELECT id, kode, nama FROM kode_pembatalan WHERE s
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
-<a href="<?= legacy_url('modules/billing/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Kembali</a>
+<a href="<?= legacy_url('modules/billing/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.back')) ?></a>
 
 <div class="card" style="margin-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <div>
@@ -111,21 +111,21 @@ require_once __DIR__ . '/../../includes/header.php';
   </div>
   <div style="text-align:right">
     <div class="badge badge-blue">No. <?= e($kj['no_kunjungan']) ?></div>
-    <?php if ($isFinal): ?><br><span class="badge badge-green" style="margin-top:6px">Billing Final</span><?php endif; ?>
+    <?php if ($isFinal): ?><br><span class="badge badge-green" style="margin-top:6px"><?= e(t('common.billing_final')) ?></span><?php endif; ?>
   </div>
 </div>
 
 <?php if ($errors): ?><div class="alert alert-danger" style="margin-top:14px"><?= implode('<br>', array_map('e', $errors)) ?></div><?php endif; ?>
 <?php if ($isFinal): ?><div class="alert alert-info" style="margin-top:14px">Billing sudah difinalisasi & terkunci. Lanjutkan ke <b>Keuangan</b> untuk pembayaran.</div><?php endif; ?>
 
-<div class="section-title">Rincian Layanan</div>
+<div class="section-title"><?= e(t('common.service_breakdown')) ?></div>
 <div class="table-wrap">
   <table style="width:100%">
-    <thead><tr><th>Kategori</th><th style="width:110px">Kode</th><th>Deskripsi</th><th style="width:70px">Qty</th>
-      <th style="width:140px;text-align:right">Tarif</th><th style="width:150px;text-align:right">Subtotal</th></tr></thead>
+    <thead><tr><th><?= e(t('common.category')) ?></th><th style="width:110px"><?= e(t('common.code')) ?></th><th><?= e(t('common.description')) ?></th><th style="width:70px"><?= e(t('common.qty')) ?></th>
+      <th style="width:140px;text-align:right"><?= e(t('common.rate')) ?></th><th style="width:150px;text-align:right"><?= e(t('common.subtotal')) ?></th></tr></thead>
     <tbody>
       <?php if (!$detailLines): ?>
-        <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Belum ada layanan tercatat untuk kunjungan ini.</td></tr>
+        <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px"><?= e(t('common.no_services_yet')) ?></td></tr>
       <?php else: foreach ($detailLines as $l): ?>
         <tr>
           <td><span class="badge badge-gray"><?= e(billing_kategori_label($l['kategori'])) ?></span></td>
@@ -146,51 +146,51 @@ require_once __DIR__ . '/../../includes/header.php';
   <input type="hidden" name="aksi" id="aksi" value="simpan">
   <div class="card" style="max-width:460px;margin-left:auto">
     <div style="display:flex;justify-content:space-between;padding:6px 0">
-      <span>Subtotal Layanan</span><b><?= rupiah($svcOnly) ?></b>
+      <span><?= e(t('common.service_subtotal')) ?></span><b><?= rupiah($svcOnly) ?></b>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
-      <label style="margin:0">Biaya Administrasi</label>
+      <label style="margin:0"><?= e(t('common.admin_fee')) ?></label>
       <input type="number" min="0" step="any" name="administrasi" id="administrasi" class="form-control"
              style="width:160px;text-align:right" value="<?= (int) $administrasi ?>" <?= $isFinal ? 'disabled' : '' ?> oninput="hitung()">
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
-      <label style="margin:0">Diskon</label>
+      <label style="margin:0"><?= e(t('common.discount')) ?></label>
       <input type="number" min="0" step="any" name="diskon" id="diskon" class="form-control"
              style="width:160px;text-align:right" value="<?= (int) $diskon ?>" <?= $isFinal ? 'disabled' : '' ?> oninput="hitung()">
     </div>
     <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
     <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:var(--fs-sub);font-weight:700">
-      <span>TOTAL TAGIHAN</span><span id="totalView"><?= rupiah($total) ?></span>
+      <span><?= e(t('common.total_bill_upper')) ?></span><span id="totalView"><?= rupiah($total) ?></span>
     </div>
     <?php if (!$isFinal): ?>
     <div style="display:flex;gap:10px;margin-top:14px">
-      <button type="submit" class="btn btn-light" onclick="document.getElementById('aksi').value='simpan'"><?= app_icon("save") ?> Simpan Draft</button>
-      <button type="submit" class="btn btn-green" onclick="document.getElementById('aksi').value='finalisasi'"><?= app_icon("check") ?> Finalisasi Billing</button>
+      <button type="submit" class="btn btn-light" onclick="document.getElementById('aksi').value='simpan'"><?= app_icon("save") ?> <?= e(t('common.save_draft')) ?></button>
+      <button type="submit" class="btn btn-green" onclick="document.getElementById('aksi').value='finalisasi'"><?= app_icon("check") ?> <?= e(t('common.finalize_billing')) ?></button>
     </div>
     <?php else: ?>
-      <a class="btn" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon("keuangan") ?> Lanjut ke Pembayaran</a>
+      <a class="btn" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon("keuangan") ?> <?= e(t('common.continue_to_payment')) ?></a>
     <?php endif; ?>
     <?php if (!$isFinal && $kj['status'] !== 'selesai'): ?>
     <details style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px">
-      <summary style="cursor:pointer;color:var(--danger);font-weight:600">Batalkan Billing</summary>
-      <form method="post" action="<?= legacy_url('modules/billing/batal.php') ?>" style="margin-top:12px" onsubmit="return confirm('Yakin membatalkan billing kunjungan ini?')">
+      <summary style="cursor:pointer;color:var(--danger);font-weight:600"><?= e(t('common.cancel_billing')) ?></summary>
+      <form method="post" action="<?= legacy_url('modules/billing/batal.php') ?>" style="margin-top:12px" onsubmit="return confirm(<?= json_encode(t('common.cancel_billing_confirm'), JSON_UNESCAPED_UNICODE) ?>)">
         <?= sim_csrf_field() ?>
         <input type="hidden" name="kunjungan_id" value="<?= (int) $kunjunganId ?>">
         <input type="hidden" name="redirect" value="modules/billing/proses.php?kunjungan_id=<?= (int) $kunjunganId ?>">
         <div class="form-group">
-          <label>Kode Pembatalan <span class="req">*</span></label>
+          <label><?= e(t('common.cancellation_code')) ?> <span class="req">*</span></label>
           <select name="kode_pembatalan_id" class="form-control" required>
-            <option value="">— Pilih kode pembatalan —</option>
+            <option value=""><?= e(t('common.select_cancellation')) ?></option>
             <?php foreach ($kodeBatalList as $kb): ?>
               <option value="<?= (int) $kb['id'] ?>"><?= e($kb['kode'] . ' — ' . $kb['nama']) ?></option>
             <?php endforeach; ?>
           </select>
         </div>
         <div class="form-group">
-          <label>Keterangan tambahan</label>
-          <textarea name="alasan_batal" class="form-control" rows="2" placeholder="Opsional"></textarea>
+          <label><?= e(t('common.extra_notes')) ?></label>
+          <textarea name="alasan_batal" class="form-control" rows="2" placeholder="<?= e(t('common.optional')) ?>"></textarea>
         </div>
-        <button type="submit" class="btn btn-danger"><?= app_icon('close') ?> Batalkan Billing</button>
+        <button type="submit" class="btn btn-danger"><?= app_icon('close') ?> <?= e(t('common.cancel_billing')) ?></button>
       </form>
     </details>
     <?php endif; ?>

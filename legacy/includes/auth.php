@@ -69,7 +69,7 @@ function current_poli_id(): ?int
 function require_login(): void
 {
     if (!is_logged_in()) {
-        set_flash('warning', 'Silakan login terlebih dahulu.');
+        set_flash('warning', t('app.login_required'));
         legacy_redirect('auth/login.php');
     }
 }
@@ -93,7 +93,7 @@ function require_role(string ...$roles): void
     if (has_full_access()) return;
     if (!in_array(current_role(), $roles, true)) {
         http_response_code(403);
-        set_flash('danger', 'Anda tidak memiliki akses ke halaman tersebut.');
+        set_flash('danger', t('app.access_denied'));
         legacy_redirect('modules/dashboard/index.php');
     }
 }

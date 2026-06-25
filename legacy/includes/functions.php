@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/lang.php';
 
 if (! function_exists('legacy_url')) {
     function legacy_url(string $path = ''): string

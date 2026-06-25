@@ -59,7 +59,7 @@ if (str_contains($current, 'modules/laporan/index.php')) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="<?= e(app_locale()) ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,6 +67,7 @@ if (str_contains($current, 'modules/laporan/index.php')) {
   <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link rel="stylesheet" href="<?= legacy_url('assets/vendor/datatables.min.css') ?>">
   <link rel="stylesheet" href="<?= legacy_url('assets/css/style.css') ?>?v=<?= @filemtime(ASSETS_FS_PATH . '/css/style.css') ?>">
+  <link rel="stylesheet" href="<?= legacy_url('assets/css/lang-picker.css') ?>?v=<?= @filemtime(ASSETS_FS_PATH . '/css/lang-picker.css') ?>">
 </head>
 <body>
 <div class="layout" id="appLayout">
@@ -145,54 +146,50 @@ if (str_contains($current, 'modules/laporan/index.php')) {
       <?php endforeach; ?>
     </nav>
     <div class="sidebar-foot">
-      <form method="post" action="/logout" onsubmit="return confirm('Keluar dari aplikasi?')">
+      <form method="post" action="/logout" onsubmit="return confirm(<?= json_encode(t('app.logout_confirm'), JSON_HEX_APOS | JSON_HEX_QUOT) ?>)">
         <input type="hidden" name="_token" value="<?= csrf_token() ?>">
-        <button type="submit" class="logout-link" title="Keluar">
-          <span class="ico"><?= app_icon('logout') ?></span> <span class="txt">Keluar</span>
+        <button type="submit" class="logout-link" title="<?= e(t('app.logout')) ?>">
+          <span class="ico"><?= app_icon('logout') ?></span> <span class="txt"><?= e(t('app.logout')) ?></span>
         </button>
       </form>
     </div>
   </aside>
 
-  <button type="button" class="sidebar-backdrop" onclick="closeSidebar()" aria-label="Tutup menu" tabindex="-1"></button>
+  <button type="button" class="sidebar-backdrop" onclick="closeSidebar()" aria-label="<?= e(t('app.close_menu')) ?>" tabindex="-1"></button>
 
   <div class="main">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="menu-toggle" type="button" id="menuToggle" onclick="toggleSidebar()" title="Sembunyikan/tampilkan menu" aria-expanded="false" aria-controls="appSidebar">
+        <button class="menu-toggle" type="button" id="menuToggle" onclick="toggleSidebar()" title="<?= e(t('app.toggle_menu')) ?>" aria-expanded="false" aria-controls="appSidebar">
           <span class="mt-bars"><?= app_icon('menu') ?></span>
           <span class="mt-x"><?= app_icon('close') ?></span>
         </button>
         <div class="topbar-search">
           <span class="ts-ico"><?= app_icon('search') ?></span>
-          <input type="search" id="menuSearch" placeholder="Cari menu..." autocomplete="off">
+          <input type="search" id="menuSearch" placeholder="<?= e(t('app.search_menu')) ?>" autocomplete="off">
         </div>
       </div>
       <div class="topbar-right">
-        <!-- <button class="topbar-icon" type="button" id="themeToggle" title="Mode siang/malam">
-          <span class="ti-sun"><?= app_icon('sun') ?></span><span class="ti-moon"><?= app_icon('moon') ?></span>
-        </button> -->
-        <!-- <button class="topbar-icon" type="button" id="fullscreenToggle" title="Layar penuh"><?= app_icon('expand') ?></button> -->
-        <!-- <button class="topbar-icon" type="button" title="Notifikasi"><?= app_icon('bell') ?><span class="ti-badge">3</span></button> -->
+        <?= lang_switcher_html() ?>
         <div class="user-dropdown" id="userDropdown">
           <button type="button" class="user-chip" onclick="toggleUserMenu(event)" aria-haspopup="true" aria-expanded="false" title="Menu akun">
             <div class="avatar"><?php if (!empty($user['avatar'])): ?><img src="<?= legacy_url($user['avatar']) ?>" alt=""><?php else: ?><?= strtoupper(substr($user['nama'], 0, 1)) ?><?php endif; ?></div>
             <div class="user-meta">
               <div class="user-name"><?= e($user['nama']) ?></div>
-              <div class="user-role"><?= e($user['role_nama']) ?></div>
+              <div class="user-role"><?= e(role_label($role, $user['role_nama'] ?? '')) ?></div>
             </div>
             <span class="user-caret"><?= app_icon('chevron') ?></span>
           </button>
           <div class="user-menu" role="menu">
             <a href="<?= legacy_url('modules/akun/profil.php') ?>" role="menuitem">
-              <span class="ico"><?= app_icon('user') ?></span> Profil Saya
+              <span class="ico"><?= app_icon('user') ?></span> <?= e(t('app.my_profile')) ?>
             </a>
             <div class="user-menu-sep"></div>
             <form method="post" action="/logout" role="menuitem" class="danger"
-                  onsubmit="return confirm('Keluar dari aplikasi?')">
+                  onsubmit="return confirm(<?= json_encode(t('app.logout_confirm'), JSON_HEX_APOS | JSON_HEX_QUOT) ?>)">
               <input type="hidden" name="_token" value="<?= csrf_token() ?>">
               <button type="submit" class="user-menu-btn">
-                <span class="ico"><?= app_icon('logout') ?></span> Keluar
+                <span class="ico"><?= app_icon('logout') ?></span> <?= e(t('app.logout')) ?>
               </button>
             </form>
           </div>

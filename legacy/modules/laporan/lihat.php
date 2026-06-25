@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../includes/header.php';
   </div>
   <div style="display:flex;gap:8px">
     <a class="btn btn-light" href="<?= legacy_url('modules/laporan/export.php?' . $qs) ?>"><?= app_icon("download") ?> Export CSV</a>
-    <button class="btn btn-light" onclick="window.print()"><?= app_icon("print") ?> Cetak / PDF</button>
+    <button class="btn btn-light" onclick="window.print()"><?= app_icon("print") ?> <?= e(t('common.print_pdf')) ?></button>
   </div>
 </div>
 

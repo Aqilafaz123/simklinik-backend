@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('superadmin');
-$pageTitle = 'Pengguna & Role';
+$pageTitle = t('pages.users_roles');
 $me = current_user();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['aksi'] ?? '') === 'hapus') {
@@ -29,19 +29,19 @@ require_once __DIR__ . '/../../includes/header.php';
 ?>
 <div class="page-toolbar">
   <div>
-    <div class="pt-title"><?= app_icon("users") ?> Pengguna &amp; Role</div>
-    <div class="pt-sub"><?= count($rows) ?> akun pengguna terdaftar</div>
+    <div class="pt-title"><?= app_icon("users") ?> <?= e(t('pages.users_roles')) ?></div>
+    <div class="pt-sub"><?= e(t('common.users_registered', ['count' => count($rows)])) ?></div>
   </div>
   <div class="pt-actions">
     <a class="btn" href="<?= legacy_url('modules/pengaturan/user_form.php') ?>"
        data-modal-url="<?= legacy_url('modules/pengaturan/user_form.php?modal=1') ?>"
-       data-modal-title="Tambah Pengguna"><?= app_icon("plus") ?> Tambah Pengguna</a>
+       data-modal-title="<?= e(t('common.add_user')) ?>"><?= app_icon("plus") ?> <?= e(t('common.add_user')) ?></a>
   </div>
 </div>
 
 <div class="table-wrap" style="margin-top:18px">
   <table class="datatable dt-noscroll" style="width:100%">
-    <thead><tr><th>Pengguna</th><th>Role</th><th>Status</th><th>Login Terakhir</th><th class="no-sort col-actions">Aksi</th></tr></thead>
+    <thead><tr><th><?= e(t('common.user_col')) ?></th><th><?= e(t('common.role_col')) ?></th><th><?= e(t('app.status')) ?></th><th><?= e(t('common.last_login')) ?></th><th class="no-sort col-actions"><?= e(t('common.action')) ?></th></tr></thead>
     <tbody>
       <?php foreach ($rows as $u): $self = (int)$u['id'] === (int)$me['id']; ?>
         <tr>
@@ -49,23 +49,23 @@ require_once __DIR__ . '/../../includes/header.php';
             <div class="cell-user">
               <span class="cell-avatar"><?= strtoupper(substr($u['nama'], 0, 1)) ?></span>
               <div>
-                <div class="cu-name"><?= e($u['nama']) ?><?= $self ? ' <span class="badge badge-blue">Anda</span>' : '' ?></div>
+                <div class="cu-name"><?= e($u['nama']) ?><?= $self ? ' <span class="badge badge-blue">' . e(t('common.you')) . '</span>' : '' ?></div>
                 <div class="cu-sub">@<?= e($u['username']) ?></div>
               </div>
             </div>
           </td>
           <td><span class="badge badge-gray"><?= e($u['role_nama']) ?></span><?php if ($u['role_kode'] === 'dokter' && !empty($u['poli_nama'])): ?> <small style="color:var(--muted)"><?= e($u['poli_nama']) ?></small><?php endif; ?></td>
-          <td><span class="badge <?= $u['status'] === 'aktif' ? 'badge-green' : 'badge-red' ?>"><?= e(ucfirst($u['status'])) ?></span></td>
+          <td><span class="badge <?= $u['status'] === 'aktif' ? 'badge-green' : 'badge-red' ?>"><?= e(active_status_label($u['status'])) ?></span></td>
           <td><?= $u['last_login'] ? tgl_id($u['last_login'], true) : '-' ?></td>
           <td class="cell-actions">
             <div class="cell-actions-inner">
             <a class="btn btn-sm btn-light" href="<?= legacy_url('modules/pengaturan/user_form.php?id=' . $u['id']) ?>"
                data-modal-url="<?= legacy_url('modules/pengaturan/user_form.php?id=' . $u['id'] . '&modal=1') ?>"
-               data-modal-title="Edit Pengguna">Edit</a>
+               data-modal-title="<?= e(t('common.edit_user')) ?>"><?= e(t('common.edit')) ?></a>
             <?php if (!$self): ?>
-            <form method="post" onsubmit="return confirm('Hapus pengguna ini?')">
+            <form method="post" onsubmit="return confirm(<?= json_encode(t('common.delete_user_confirm'), JSON_UNESCAPED_UNICODE) ?>)">
               <?= sim_csrf_field() ?><input type="hidden" name="aksi" value="hapus"><input type="hidden" name="id" value="<?= (int)$u['id'] ?>">
-              <button class="btn btn-sm btn-red" type="submit">Hapus</button>
+              <button class="btn btn-sm btn-red" type="submit"><?= e(t('common.delete')) ?></button>
             </form>
             <?php endif; ?>
             </div>
@@ -80,8 +80,8 @@ require_once __DIR__ . '/../../includes/header.php';
 <div class="modal-overlay" id="dataModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="dataModalTitle">
     <div class="modal-head">
-      <div class="modal-title" id="dataModalTitle">Pengguna</div>
-      <button type="button" class="modal-close" data-modal-close aria-label="Tutup">&times;</button>
+      <div class="modal-title" id="dataModalTitle"><?= e(t('common.user_col')) ?></div>
+      <button type="button" class="modal-close" data-modal-close aria-label="<?= e(t('common.close')) ?>">&times;</button>
     </div>
     <div class="modal-body" id="dataModalBody"></div>
   </div>
@@ -93,8 +93,8 @@ require_once __DIR__ . '/../../includes/header.php';
   var titleEl = document.getElementById('dataModalTitle');
 
   function open(url, title) {
-    titleEl.textContent = title || 'Pengguna';
-    box.innerHTML = '<div class="modal-loading">Memuat…</div>';
+    titleEl.textContent = title || <?= json_encode(t('common.user_col'), JSON_UNESCAPED_UNICODE) ?>;
+    box.innerHTML = <?= json_encode('<div class="modal-loading">' . t('common.loading') . '</div>', JSON_UNESCAPED_UNICODE) ?>;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     fetch(url, { headers: { 'X-Requested-With': 'fetch' } })

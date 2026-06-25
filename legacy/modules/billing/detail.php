@@ -56,9 +56,9 @@ $svcOnly = array_sum(array_column(array_filter($detailLines, fn($l) => $l['kateg
 $statusBadge = ['billing' => 'badge-orange', 'pembayaran' => 'badge-blue', 'selesai' => 'badge-green'];
 
 if (!$modal) {
-    $pageTitle = 'Detail Tagihan';
+    $pageTitle = t('pages.billing_detail');
     require_once __DIR__ . '/../../includes/header.php';
-    echo '<a href="' . legacy_url('modules/billing/index.php') . '" class="btn btn-light btn-sm">' . app_icon('arrowleft') . ' Kembali</a>';
+    echo '<a href="' . legacy_url('modules/billing/index.php') . '" class="btn btn-light btn-sm">' . app_icon('arrowleft') . ' ' . e(t('common.back')) . '</a>';
     echo '<div class="card" style="margin-top:14px">';
 }
 ?>
@@ -80,23 +80,23 @@ if (!$modal) {
     </div>
     <div class="bd-hero-side">
       <div class="bd-kunjungan">No. <?= e($kj['no_kunjungan']) ?></div>
-      <span class="badge <?= $statusBadge[$kj['status']] ?? 'badge-gray' ?>"><?= e(ucfirst($kj['status'])) ?></span>
-      <?php if ($isFinal): ?><span class="badge badge-green">Final</span><?php endif; ?>
+      <span class="badge <?= $statusBadge[$kj['status']] ?? 'badge-gray' ?>"><?= e(status_label($kj['status'])) ?></span>
+      <?php if ($isFinal): ?><span class="badge badge-green"><?= e(t('common.final')) ?></span><?php endif; ?>
     </div>
   </div>
 
   <!-- Rincian layanan -->
   <div class="bd-section">
-    <div class="bd-section-title"><?= app_icon('billing') ?> Rincian Layanan</div>
+    <div class="bd-section-title"><?= app_icon('billing') ?> <?= e(t('common.service_breakdown')) ?></div>
     <div class="bd-table-wrap">
       <table class="bd-table">
         <thead>
-          <tr><th>Kategori</th><th>Kode</th><th>Deskripsi</th><th class="num">Qty</th>
-              <th class="num">Tarif</th><th class="num">Subtotal</th></tr>
+          <tr><th><?= e(t('common.category')) ?></th><th><?= e(t('common.code')) ?></th><th><?= e(t('common.description')) ?></th><th class="num"><?= e(t('common.qty')) ?></th>
+              <th class="num"><?= e(t('common.rate')) ?></th><th class="num"><?= e(t('common.subtotal')) ?></th></tr>
         </thead>
         <tbody>
           <?php if (!$detailLines): ?>
-            <tr><td colspan="6" class="bd-empty">Belum ada layanan tercatat untuk kunjungan ini.</td></tr>
+            <tr><td colspan="6" class="bd-empty"><?= e(t('common.no_services_yet')) ?></td></tr>
           <?php else: foreach ($detailLines as $l): ?>
             <tr>
               <td><span class="badge badge-gray"><?= e(billing_kategori_label($l['kategori'])) ?></span></td>
@@ -114,24 +114,24 @@ if (!$modal) {
 
   <!-- Ringkasan total -->
   <div class="bd-summary">
-    <div class="bd-sum-row"><span>Subtotal Layanan</span><b><?= rupiah($svcOnly) ?></b></div>
+    <div class="bd-sum-row"><span><?= e(t('common.service_subtotal')) ?></span><b><?= rupiah($svcOnly) ?></b></div>
     <?php if ($administrasi > 0): ?>
-      <div class="bd-sum-row"><span>Biaya Administrasi</span><b><?= rupiah($administrasi) ?></b></div>
+      <div class="bd-sum-row"><span><?= e(t('common.admin_fee')) ?></span><b><?= rupiah($administrasi) ?></b></div>
     <?php endif; ?>
     <?php if ($diskon > 0): ?>
-      <div class="bd-sum-row disc"><span>Diskon</span><b>&minus; <?= rupiah($diskon) ?></b></div>
+      <div class="bd-sum-row disc"><span><?= e(t('common.discount')) ?></span><b>&minus; <?= rupiah($diskon) ?></b></div>
     <?php endif; ?>
     <div class="bd-sum-total">
-      <span>TOTAL TAGIHAN</span>
+      <span><?= e(t('common.total_bill_upper')) ?></span>
       <span class="bd-total-val"><?= rupiah($total) ?></span>
     </div>
   </div>
 
   <?php if ($modal): ?>
   <div class="bd-actions">
-    <button type="button" class="btn btn-light" data-modal-close><?= app_icon('close') ?> Tutup</button>
+    <button type="button" class="btn btn-light" data-modal-close><?= app_icon('close') ?> <?= e(t('common.close')) ?></button>
     <?php if ($kj['status'] === 'pembayaran'): ?>
-      <a class="btn" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon('keuangan') ?> Ke Pembayaran</a>
+      <a class="btn" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon('keuangan') ?> <?= e(t('common.to_payment')) ?></a>
     <?php endif; ?>
   </div>
   <?php endif; ?>

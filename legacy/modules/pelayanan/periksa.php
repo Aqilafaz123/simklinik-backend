@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_role('dokter');
-$pageTitle = 'Pemeriksaan Pasien';
+$pageTitle = t('pages.exam');
 
 $kunjunganId = (int) ($_GET['kunjungan_id'] ?? $_POST['kunjungan_id'] ?? 0);
 
@@ -222,7 +222,7 @@ $umur = $kj['tgl_lahir'] ? (int) ((time() - strtotime($kj['tgl_lahir'])) / 31556
 
 require_once __DIR__ . '/../../includes/header.php';
 ?>
-<a href="<?= legacy_url('modules/pelayanan/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Kembali ke Antrian</a>
+<a href="<?= legacy_url('modules/pelayanan/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> <?= e(t('common.back_to_queue')) ?></a>
 
 <!-- Identitas pasien -->
 <div class="card" style="margin-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
@@ -277,7 +277,7 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="card" style="margin-top:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h3>Diagnosa (ICD-10)</h3>
-      <button type="button" class="btn btn-sm" onclick="addDiag()"><?= app_icon("plus") ?> Tambah Diagnosa</button>
+      <button type="button" class="btn btn-sm" onclick="addDiag()"><?= app_icon("plus") ?> <?= e(t('common.add_diagnosis')) ?></button>
     </div>
     <table style="width:100%"><thead><tr><th style="width:160px">Kode ICD-10</th><th>Diagnosa</th><th style="width:180px">Jenis</th><th style="width:50px"></th></tr></thead>
       <tbody id="diagBody">
@@ -297,7 +297,7 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="card" style="margin-top:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h3>Medical Service</h3>
-      <button type="button" class="btn btn-sm" onclick="addTind()"><?= app_icon("plus") ?> Tambah Medical Service</button>
+      <button type="button" class="btn btn-sm" onclick="addTind()"><?= app_icon("plus") ?> <?= e(t('common.add_medical_service')) ?></button>
     </div>
     <table style="width:100%"><thead><tr><th>Medical Service</th><th style="width:120px">Qty</th><th style="width:50px"></th></tr></thead>
       <tbody id="tindBody">
@@ -370,7 +370,7 @@ require_once __DIR__ . '/../../includes/header.php';
   <div class="card" style="margin-top:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <h3>Resep Obat</h3>
-      <button type="button" class="btn btn-sm" onclick="addObat()"><?= app_icon("plus") ?> Tambah Obat</button>
+      <button type="button" class="btn btn-sm" onclick="addObat()"><?= app_icon("plus") ?> <?= e(t('common.add_medicine')) ?></button>
     </div>
 
     <table style="width:100%"><thead><tr><th>Obat</th><th style="width:120px">Qty</th><th style="width:120px">Dosis</th><th>Aturan Pakai</th><th style="width:50px"></th></tr></thead>
@@ -390,7 +390,7 @@ require_once __DIR__ . '/../../includes/header.php';
   </div>
 
   <div style="display:flex;gap:10px;margin:20px 0 40px">
-    <button type="submit" class="btn btn-light" onclick="document.getElementById('aksi').value='simpan'"><?= app_icon("save") ?> Simpan Draft</button>
+    <button type="submit" class="btn btn-light" onclick="document.getElementById('aksi').value='simpan'"><?= app_icon("save") ?> <?= e(t('common.save_draft')) ?></button>
     <button type="submit" class="btn btn-green" onclick="document.getElementById('aksi').value='selesai'"><?= app_icon("check") ?> Selesai Periksa</button>
   </div>
 </form>

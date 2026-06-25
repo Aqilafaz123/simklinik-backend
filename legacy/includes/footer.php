@@ -1,6 +1,6 @@
     </main>
     <footer class="footer">
-      &copy; <?= date('Y') ?> <?= APP_FULL ?> &middot; <?= CLINIC_NAME ?>
+      &copy; <?= date('Y') ?> <?= e(t('common.system_full')) ?> &middot; <?= CLINIC_NAME ?>
     </footer>
   </div>
 </div>
@@ -92,7 +92,7 @@ $(function () {
     var $headRow = $t.find('thead tr').first();
     var firstHead = $.trim($headRow.children().first().text()).toLowerCase();
     if (firstHead === 'no') return; // sudah ada kolom No, lewati
-    $headRow.prepend('<th class="no-sort col-no">No</th>');
+    $headRow.prepend('<th class="no-sort col-no">' + <?= json_encode(t('datatable.col_no')) ?> + '</th>');
     $t.find('tbody tr').each(function () {
       if ($(this).children('td').length) $(this).prepend('<td class="col-no"></td>');
     });
@@ -114,17 +114,7 @@ $(function () {
       { orderable: false, targets: 'no-sort' },
       { searchable: false, targets: 'col-no' }   // kolom No tak ikut pencarian
     ],
-    language: {
-      search: 'Cari:',
-      searchPlaceholder: 'ketik untuk mencari...',
-      lengthMenu: 'Tampilkan _MENU_ data',
-      info: 'Menampilkan _START_–_END_ dari _TOTAL_ data',
-      infoEmpty: 'Tidak ada data',
-      infoFiltered: '(disaring dari _MAX_ total data)',
-      zeroRecords: 'Data tidak ditemukan',
-      emptyTable: 'Belum ada data',
-      paginate: { first: 'Awal', previous: 'Sebelumnya', next: 'Berikutnya', last: 'Akhir' }
-    }
+    language: <?= datatable_lang_json() ?>
   };
 
   // Init per-tabel agar scrollX bisa dimatikan per tabel. Mode scrollX memisah

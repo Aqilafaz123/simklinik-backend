@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('clinicUnit', $settings['clinic_unit'] ?? config('sim-klinik.clinic_unit'));
             $view->with('clinicAddress', $settings['clinic_address'] ?? config('sim-klinik.clinic_address'));
             $view->with('clinicLogo', $settings['clinic_logo'] ?? '');
+            $view->with('currentLocale', app()->getLocale());
         });
 
         View::composer(['layouts.app', 'components.sidebar'], function ($view) {
