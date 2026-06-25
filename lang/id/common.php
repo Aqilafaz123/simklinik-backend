@@ -13,6 +13,7 @@ return [
     'add' => 'Tambah',
     'action' => 'Aksi',
     'view' => 'Lihat',
+    'view_all' => 'Lihat Semua',
     'view_detail' => 'Lihat Detail',
     'print' => 'Cetak',
     'card' => 'Kartu',

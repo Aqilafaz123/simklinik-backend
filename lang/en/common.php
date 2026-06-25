@@ -13,6 +13,7 @@ return [
     'add' => 'Add',
     'action' => 'Action',
     'view' => 'View',
+    'view_all' => 'View All',
     'view_detail' => 'View Detail',
     'print' => 'Print',
     'card' => 'Card',
