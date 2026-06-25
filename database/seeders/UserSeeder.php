@@ -18,6 +18,12 @@ class UserSeeder extends Seeder
 
         $users = [
             [
+                'role_id' => $roles['superadmin'],
+                'poli_id' => null,
+                'nama' => 'Super Administrator',
+                'username' => 'superadmin',
+            ],
+            [
                 'role_id' => $roles['admin'],
                 'poli_id' => null,
                 'nama' => 'Administrator',

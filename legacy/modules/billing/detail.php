@@ -6,7 +6,7 @@
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/billing_lib.php';
 require_once __DIR__ . '/../../includes/icons.php'; // app_icon() dipakai juga di mode modal (tanpa header.php)
-require_role('kasir');
+require_role('kasir', 'admin', 'superadmin');
 
 $modal = isset($_GET['modal'])
     || strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'fetch';

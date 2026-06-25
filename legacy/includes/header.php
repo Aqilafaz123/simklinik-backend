@@ -14,10 +14,10 @@ $role      = current_role();
 $current   = $_SERVER['SCRIPT_NAME'] ?? '';
 $flash     = get_flash();
 
-// Jumlah data per kelompok Master Data (untuk badge di menu) — hanya admin.
+// Jumlah data per kelompok Master Data (untuk badge di menu) — hanya superadmin.
 $masterCounts = [];
 $curMasterGroup = null;
-if ($role === 'admin') {
+if ($role === 'superadmin') {
     require_once __DIR__ . '/../modules/master/entities.php';
     $mEnts = master_entities();
     foreach ($mEnts as $mEnt) {
@@ -81,7 +81,7 @@ if (str_contains($current, 'modules/laporan/index.php')) {
         <?php
           // Saring item sesuai role
           $items = array_filter($grup['items'], fn($it) =>
-              $role === 'admin' || in_array($role, $it['roles'], true));
+              $role === 'superadmin' || in_array($role, $it['roles'], true));
           if (!$items) continue;
         ?>
         <?php if (!empty($grup['grup'])): ?>
@@ -98,7 +98,7 @@ if (str_contains($current, 'modules/laporan/index.php')) {
             // Saring anak menu sesuai role (anak boleh punya 'roles' sendiri).
             $children = !empty($it['children'])
                 ? array_filter($it['children'], fn($c) =>
-                    !isset($c['roles']) || $role === 'admin' || in_array($role, $c['roles'], true))
+                    !isset($c['roles']) || $role === 'superadmin' || in_array($role, $c['roles'], true))
                 : [];
           ?>
           <?php if ($children): ?>

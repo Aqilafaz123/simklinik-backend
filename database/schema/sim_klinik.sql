@@ -277,6 +277,10 @@ CREATE TABLE kunjungan (
   no_jaminan    VARCHAR(50) NULL,
   status        ENUM('menunggu','periksa','penunjang','farmasi','billing','pembayaran','selesai','batal') NOT NULL DEFAULT 'menunggu',
   keluhan_awal  VARCHAR(255) NULL,
+  kode_pembatalan_id INT NULL,
+  alasan_batal  VARCHAR(255) NULL,
+  batal_at      DATETIME NULL,
+  batal_by      INT NULL,
   user_id       INT NULL,
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_kj_pasien FOREIGN KEY (pasien_id) REFERENCES pasien(id),
@@ -460,6 +464,14 @@ CREATE TABLE resep_detail (
   subtotal    DECIMAL(12,2) NOT NULL DEFAULT 0,
   CONSTRAINT fk_resepdet_resep FOREIGN KEY (resep_id) REFERENCES resep(id),
   CONSTRAINT fk_resepdet_obat FOREIGN KEY (obat_id) REFERENCES obat(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE kode_pembatalan (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  kode        VARCHAR(20) NOT NULL UNIQUE,
+  nama        VARCHAR(100) NOT NULL,
+  keterangan  VARCHAR(255) NULL,
+  status      ENUM('aktif','nonaktif') NOT NULL DEFAULT 'aktif'
 ) ENGINE=InnoDB;
 
 CREATE TABLE billing (

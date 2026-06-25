@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('registrasi');
+require_role('registrasi', 'admin', 'superadmin');
 $pageTitle = 'Data Pasien';
 
 // Muat semua pasien; pencarian/sort/paging ditangani DataTables (client-side)

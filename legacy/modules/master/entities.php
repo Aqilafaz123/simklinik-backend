@@ -234,6 +234,18 @@ function master_entities(): array
             ],
         ],
 
+        // ---------- Billing ----------
+        'kode_pembatalan' => [
+            'label' => 'Kode Pembatalan Billing', 'singular' => 'Kode Pembatalan',
+            'table' => 'kode_pembatalan', 'group' => 'Billing', 'icon' => app_icon('close'), 'order' => 'kode',
+            'fields' => [
+                'kode'       => ['label' => 'Kode', 'type' => 'text', 'required' => true, 'list' => true],
+                'nama'       => ['label' => 'Nama Alasan', 'type' => 'text', 'required' => true, 'list' => true],
+                'keterangan' => ['label' => 'Keterangan', 'type' => 'text', 'list' => true],
+                'status'     => ['label' => 'Status', 'type' => 'enum', 'options' => ['aktif', 'nonaktif'], 'default' => 'aktif', 'list' => true],
+            ],
+        ],
+
         // ---------- Pasien ----------
         'kelompok_pasien' => [
             'label' => 'Kelompok Pasien', 'singular' => 'Kelompok Pasien',

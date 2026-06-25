@@ -186,7 +186,7 @@ require_once __DIR__ . '/../../includes/header.php';
           <span><span class="q-t">Dashboard</span><span class="q-s">Ringkasan klinik</span></span>
           <span class="q-go"><?= app_icon('chevron') ?></span>
         </a>
-        <?php if (current_role() === 'admin'): ?>
+        <?php if (current_role() === 'superadmin'): ?>
         <a class="pf-quick" href="<?= legacy_url('modules/pengaturan/users.php') ?>">
           <span class="qic"><?= app_icon('users') ?></span>
           <span><span class="q-t">Pengguna &amp; Role</span><span class="q-s">Kelola pengguna</span></span>

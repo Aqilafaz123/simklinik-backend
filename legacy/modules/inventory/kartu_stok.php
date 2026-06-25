@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('farmasi');
+require_role('farmasi', 'superadmin');
 $pageTitle = 'Kartu Stok';
 
 $obatId = (int) ($_GET['obat_id'] ?? 0);

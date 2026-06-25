@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('admin');
+require_role('superadmin');
 $pageTitle = 'Profil Klinik';
 
 $keys = ['clinic_name' => 'Nama Klinik', 'clinic_unit' => 'Unit / Cabang', 'clinic_address' => 'Alamat'];

@@ -38,7 +38,7 @@ return new class extends Migration
             'rad_pemeriksaan', 'rad_kategori',
             'obat', 'obat_kategori', 'obat_satuan',
             'bank', 'asuransi', 'corporate', 'supplier',
-            'pasien', 'kelompok_pasien', 'setting', 'roles',
+            'pasien', 'kelompok_pasien', 'kode_pembatalan', 'setting', 'roles',
         ];
 
         foreach ($tables as $table) {

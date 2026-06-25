@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('dokter');
+require_role('dokter', 'superadmin');
 $pageTitle = 'Rekam Medis Pasien';
 
 $pasienId = (int) ($_GET['pasien_id'] ?? 0);

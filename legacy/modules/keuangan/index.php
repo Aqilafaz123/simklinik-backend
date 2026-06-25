@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('kasir');
+require_role('kasir', 'admin', 'superadmin');
 $pageTitle = 'Keuangan';
 $tgl = $_GET['tgl'] ?? date('Y-m-d');
 

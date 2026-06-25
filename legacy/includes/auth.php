@@ -80,11 +80,17 @@ function has_role(string ...$roles): bool
     return in_array(current_role(), $roles, true);
 }
 
-/** Wajib salah satu role (admin selalu diizinkan) */
+/** Role dengan akses penuh seluruh modul */
+function has_full_access(): bool
+{
+    return current_role() === 'superadmin';
+}
+
+/** Wajib salah satu role (superadmin selalu diizinkan) */
 function require_role(string ...$roles): void
 {
     require_login();
-    if (current_role() === 'admin') return;     // admin akses semua
+    if (has_full_access()) return;
     if (!in_array(current_role(), $roles, true)) {
         http_response_code(403);
         set_flash('danger', 'Anda tidak memiliki akses ke halaman tersebut.');

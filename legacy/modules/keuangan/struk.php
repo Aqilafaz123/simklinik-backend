@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/keuangan_lib.php';
 require_once __DIR__ . '/../../includes/billing_lib.php';
 require_once __DIR__ . '/../../includes/icons.php';
-require_role('kasir');
+require_role('kasir', 'admin', 'superadmin');
 
 $invoiceId = (int) ($_GET['invoice_id'] ?? 0);
 $inv = db()->prepare(

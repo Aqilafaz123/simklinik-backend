@@ -16,7 +16,7 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        if ($user->roleKode() === 'admin') {
+        if ($user->roleKode() === 'superadmin') {
             return $next($request);
         }
 

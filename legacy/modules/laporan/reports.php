@@ -145,10 +145,10 @@ function laporan_list(): array
     ];
 }
 
-/** Daftar laporan yang boleh diakses sebuah role (admin = semua) */
+/** Daftar laporan yang boleh diakses sebuah role (superadmin/admin = semua) */
 function laporan_list_for(?string $role): array
 {
-    if ($role === 'admin') return laporan_list();
+    if (in_array($role, ['superadmin', 'admin'], true)) return laporan_list();
     return array_filter(laporan_list(), fn($r) => in_array($role, $r['roles'] ?? [], true));
 }
 

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/keuangan_lib.php';
-require_role('kasir');
+require_role('kasir', 'admin', 'superadmin');
 $pageTitle = 'Pembayaran';
 $user = current_user();
 

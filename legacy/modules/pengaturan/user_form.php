@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/icons.php'; // app_icon() juga dipakai saat mode modal (tanpa header.php)
-require_role('admin');
+require_role('superadmin');
 
 $id = (int) ($_GET['id'] ?? 0);
 $isEdit = $id > 0;

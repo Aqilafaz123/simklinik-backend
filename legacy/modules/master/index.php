@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/entities.php';
-require_role('admin');
+require_role('superadmin');
 $pageTitle = 'Master Data';
 
 $all = master_entities();

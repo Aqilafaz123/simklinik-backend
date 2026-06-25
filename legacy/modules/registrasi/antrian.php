@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/icons.php';
-require_role('registrasi');
+require_role('registrasi', 'admin', 'superadmin');
 
 $today = date('Y-m-d');
 // Antrian per poli hari ini (yang masih menunggu / sedang diperiksa)

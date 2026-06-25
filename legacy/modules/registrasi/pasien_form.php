@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('registrasi');
+require_role('registrasi', 'admin', 'superadmin');
 
 $id = (int) ($_GET['id'] ?? 0);
 $isEdit = $id > 0;

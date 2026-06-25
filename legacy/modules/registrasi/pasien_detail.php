@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
-require_role('registrasi');
+require_role('registrasi', 'admin', 'superadmin');
 require_once __DIR__ . '/../../includes/icons.php'; // agar app_icon() tersedia di mode modal
 
 $modal = isset($_GET['modal']);

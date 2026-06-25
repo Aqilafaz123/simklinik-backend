@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../includes/billing_lib.php';
-require_role('kasir');
+require_role('kasir', 'admin', 'superadmin');
 $pageTitle = 'Proses Billing';
 
 $kunjunganId = (int) ($_GET['kunjungan_id'] ?? $_POST['kunjungan_id'] ?? 0);
@@ -98,6 +98,8 @@ if ($isFinal) {
 }
 $svcOnly = array_sum(array_column(array_filter($detailLines, fn($l) => $l['kategori'] !== 'administrasi'), 'subtotal'));
 
+$kodeBatalList = db()->query("SELECT id, kode, nama FROM kode_pembatalan WHERE status='aktif' ORDER BY kode")->fetchAll();
+
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 <a href="<?= legacy_url('modules/billing/index.php') ?>" class="btn btn-light btn-sm"><?= app_icon("arrowleft") ?> Kembali</a>
@@ -167,6 +169,30 @@ require_once __DIR__ . '/../../includes/header.php';
     </div>
     <?php else: ?>
       <a class="btn" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon("keuangan") ?> Lanjut ke Pembayaran</a>
+    <?php endif; ?>
+    <?php if (!$isFinal && $kj['status'] !== 'selesai'): ?>
+    <details style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px">
+      <summary style="cursor:pointer;color:var(--danger);font-weight:600">Batalkan Billing</summary>
+      <form method="post" action="<?= legacy_url('modules/billing/batal.php') ?>" style="margin-top:12px" onsubmit="return confirm('Yakin membatalkan billing kunjungan ini?')">
+        <?= sim_csrf_field() ?>
+        <input type="hidden" name="kunjungan_id" value="<?= (int) $kunjunganId ?>">
+        <input type="hidden" name="redirect" value="modules/billing/proses.php?kunjungan_id=<?= (int) $kunjunganId ?>">
+        <div class="form-group">
+          <label>Kode Pembatalan <span class="req">*</span></label>
+          <select name="kode_pembatalan_id" class="form-control" required>
+            <option value="">— Pilih kode pembatalan —</option>
+            <?php foreach ($kodeBatalList as $kb): ?>
+              <option value="<?= (int) $kb['id'] ?>"><?= e($kb['kode'] . ' — ' . $kb['nama']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Keterangan tambahan</label>
+          <textarea name="alasan_batal" class="form-control" rows="2" placeholder="Opsional"></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger"><?= app_icon('close') ?> Batalkan Billing</button>
+      </form>
+    </details>
     <?php endif; ?>
   </div>
 </form>
