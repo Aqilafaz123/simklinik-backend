@@ -126,7 +126,6 @@ require_once __DIR__ . '/../../includes/header.php';
             echo '<p class="result-empty">' . e(t('common.search_patient_hint')) . '</p>';
         }
       ?>
-      <a class="btn btn-green btn-block" style="margin-top:8px" href="<?= legacy_url('modules/registrasi/pasien_form.php') ?>"><?= app_icon('plus') ?> <?= e(t('common.register_new_patient')) ?></a>
     <?php endif; ?>
   </div>
 
