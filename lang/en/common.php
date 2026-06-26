@@ -232,7 +232,7 @@ return [
     'select_clinic' => '— Select Clinic —',
     'select_doctor_optional' => '— Select Doctor (optional) —',
     'insurance_type' => 'Insurance Type',
-    'general' => 'General',
+    'general' => 'General / Cash',
     'private_insurance' => 'Private Insurance',
     'corporate' => 'Corporate / Company',
     'company' => 'Company',

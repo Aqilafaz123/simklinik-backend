@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tgl      = $_POST['tgl_kunjungan'] ?? date('Y-m-d');
     $jenis    = $_POST['jenis_penjamin'] ?? 'umum';
     $keluhan  = trim($_POST['keluhan_awal'] ?? '');
-    $asuransiId  = $jenis === 'asuransi' || $jenis === 'bpjs' ? ((int) ($_POST['asuransi_id'] ?? 0) ?: null) : null;
+    $asuransiId  = $jenis === 'asuransi' ? ((int) ($_POST['asuransi_id'] ?? 0) ?: null) : null;
     $corporateId = $jenis === 'corporate' ? ((int) ($_POST['corporate_id'] ?? 0) ?: null) : null;
     $noJaminan   = trim($_POST['no_jaminan'] ?? '') ?: null;
 
     if (!$pasien)  $errors[] = t('common.err_patient_not_selected');
     if (!$poliId)  $errors[] = t('common.err_clinic_required');
-    if (!in_array($jenis, ['umum', 'bpjs', 'asuransi', 'corporate'], true)) $errors[] = t('common.err_insurance_invalid');
+    if (!in_array($jenis, ['umum', 'asuransi', 'corporate'], true)) $errors[] = t('common.err_insurance_invalid');
 
     if (!$errors) {
         try {
@@ -170,7 +170,6 @@ require_once __DIR__ . '/../../includes/header.php';
         <label><?= e(t('common.insurance_type')) ?></label>
         <select name="jenis_penjamin" id="jenis_penjamin" class="form-control" onchange="togglePenjamin()">
           <option value="umum"><?= e(t('common.general')) ?></option>
-          <option value="bpjs">BPJS</option>
           <option value="asuransi"><?= e(t('common.private_insurance')) ?></option>
           <option value="corporate"><?= e(t('common.corporate')) ?></option>
         </select>
@@ -214,7 +213,7 @@ var SIM_REG_LANG = <?= json_encode([
 function togglePenjamin() {
   var v = document.getElementById('jenis_penjamin').value;
   document.querySelectorAll('.penjamin-extra').forEach(function(el){ el.style.display='none'; });
-  if (v === 'asuransi' || v === 'bpjs') {
+  if (v === 'asuransi') {
     document.getElementById('box_asuransi').style.display = '';
     document.getElementById('box_nojaminan').style.display = '';
   } else if (v === 'corporate') {

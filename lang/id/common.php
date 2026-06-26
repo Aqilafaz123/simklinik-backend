@@ -232,7 +232,7 @@ return [
     'select_clinic' => '— Pilih Poli —',
     'select_doctor_optional' => '— Pilih Dokter (opsional) —',
     'insurance_type' => 'Jenis Penjamin',
-    'general' => 'Umum',
+    'general' => 'Umum / Cash',
     'private_insurance' => 'Asuransi Swasta',
     'corporate' => 'Corporate / Perusahaan',
     'company' => 'Perusahaan',
