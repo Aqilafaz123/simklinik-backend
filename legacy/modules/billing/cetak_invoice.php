@@ -5,22 +5,27 @@ require_once __DIR__ . '/../../includes/billing_lib.php';
 require_once __DIR__ . '/../../includes/icons.php';
 require_role('kasir', 'admin', 'superadmin');
 
-$invoiceId = (int) ($_GET['invoice_id'] ?? 0);
-$inv = db()->prepare(
-    "SELECT i.*, k.no_kunjungan, k.tgl_kunjungan, k.jenis_penjamin, k.no_jaminan, k.created_at AS admission,
-            p.no_mr, p.nama AS pasien, po.nama AS poli, d.nama AS dokter,
+$kunjunganId = (int) ($_GET['kunjungan_id'] ?? 0);
+$inv = get_or_create_invoice($kunjunganId);
+
+if (!$inv) {
+    set_flash('danger', 'Billing belum difinalisasi sehingga Invoice belum terbit.');
+    legacy_redirect('modules/billing/index.php');
+}
+
+$kj = db()->prepare(
+    "SELECT k.*, p.no_mr, p.nama AS pasien, po.nama AS poli, d.nama AS dokter,
             a.nama AS asuransi_nama, c.nama AS corporate_nama
-     FROM invoice i
-     JOIN kunjungan k ON k.id = i.kunjungan_id
+     FROM kunjungan k
      JOIN pasien p ON p.id = k.pasien_id
      JOIN poli po ON po.id = k.poli_id
      LEFT JOIN dokter d ON d.id = k.dokter_id
      LEFT JOIN asuransi a ON a.id = k.asuransi_id
      LEFT JOIN corporate c ON c.id = k.corporate_id
-     WHERE i.id = ?");
-$inv->execute([$invoiceId]);
-$inv = $inv->fetch();
-if (!$inv) { set_flash('danger', 'Invoice tidak ditemukan.'); legacy_redirect('modules/keuangan/index.php'); }
+     WHERE k.id = ?"
+);
+$kj->execute([$kunjunganId]);
+$kj = $kj->fetch();
 
 $detail = db()->prepare("SELECT kategori,item_code,deskripsi,qty,subtotal FROM billing_detail WHERE billing_id=? ORDER BY FIELD(kategori,'laboratorium','radiologi','diagnostik','fisioterapi','jasa_dokter','tindakan','administrasi','farmasi'), id");
 $detail->execute([$inv['billing_id']]);
@@ -30,44 +35,26 @@ $detail = $detail->fetchAll();
 $grouped = [];
 foreach ($detail as $d) { $grouped[struk_grup_label($d['kategori'])][] = $d; }
 
-$pmts = db()->prepare("SELECT metode,jumlah,tanggal FROM pembayaran WHERE invoice_id=? AND status='valid' ORDER BY id");
-$pmts->execute([$invoiceId]);
-$pmts = $pmts->fetchAll();
-
 $billing = db()->prepare("SELECT subtotal,diskon,total FROM billing WHERE id=?");
 $billing->execute([$inv['billing_id']]); $billing = $billing->fetch();
 
 $bank = db()->query("SELECT nama_bank,no_rekening,atas_nama,cabang FROM bank WHERE status='aktif' ORDER BY id LIMIT 1")->fetch();
-$sisa = (float) $inv['total'] - (float) $inv['terbayar'];
-$tglDate = fn($d) => date('d-M-Y', strtotime($d));
-$amt = fn($v) => number_format((float) $v, 2, '.', ','); // format angka struk: 1,234,567.00
 
-// Ada konsultasi dokter? (kategori jasa_dokter). Bila tidak -> "NO CONSULTATION".
+$tglDate = fn($d) => date('d-M-Y', strtotime($d));
+$amt = fn($v) => number_format((float) $v, 2, '.', ',');
+
 $hasConsult = false;
 foreach ($detail as $d) { if ($d['kategori'] === 'jasa_dokter') { $hasConsult = true; break; } }
 
-// Kode prefix klinik (di struk client "SL", di kita "GBK") & tempat tanda tangan.
 $codePrefix = defined('CODE_PREFIX') ? CODE_PREFIX : 'GBK';
-$signPlace  = trim(explode(',', CLINIC_ADDRESS)[0]); // kota dari alamat klinik
+$signPlace  = trim(explode(',', CLINIC_ADDRESS)[0]);
 
-// Deskripsi penjamin spesifik untuk pembayaran metode 'penjamin'
-// (ASURANSI: nama, BPJS: nama, CORPORATE: nama) + no. jaminan bila ada.
-$penjaminLabel = (function () use ($inv) {
-    switch ($inv['jenis_penjamin']) {
-        case 'asuransi':  $t = 'ASURANSI: ' . ($inv['asuransi_nama'] ?: '-'); break;
-        case 'bpjs':      $t = 'BPJS: ' . ($inv['asuransi_nama'] ?: 'BPJS KESEHATAN'); break;
-        case 'corporate': $t = 'CORPORATE: ' . ($inv['corporate_nama'] ?: '-'); break;
-        default:          $t = 'PENJAMIN';
-    }
-    if (!empty($inv['no_jaminan'])) $t .= ' (No. ' . $inv['no_jaminan'] . ')';
-    return $t;
-})();
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Receipt <?= e($inv['no_invoice']) ?></title>
+  <title>Invoice <?= e($inv['no_invoice']) ?></title>
   <style>
     body{font-family:'Segoe UI',Arial,sans-serif;background:#eef2f7;color:#1e293b;padding:24px;
       display:flex;justify-content:center}
@@ -93,62 +80,36 @@ $penjaminLabel = (function () use ($inv) {
     .sum .val{text-align:right}
     .sum .net{font-size:16px;font-weight:800;border-top:1.5px solid #1e293b;margin-top:4px;padding-top:6px}
     .says{font-size:12.5px;margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:8px;text-align:right}
-    .pay{font-size:12.5px;margin-top:12px}
-    .payline{display:flex;justify-content:center;gap:48px;max-width:470px;margin:0 auto;padding:2px 0}
-    .signdate{margin-top:16px;font-size:12.5px}
     .bank{font-size:12px;margin-top:16px;color:#334155}
-    .stamp{display:inline-block;margin-top:10px;padding:4px 14px;border:2px solid #16a34a;color:#16a34a;
-      font-weight:800;border-radius:6px;letter-spacing:2px}
-    .stamp.red{border-color:#dc2626;color:#dc2626}
-    .foot{font-size:11px;color:#64748b;margin-top:16px;text-align:center}
+    .signdate{margin-top:16px;font-size:12.5px}
     .actions{margin-top:18px;text-align:center}
     .actions button,.actions a{padding:9px 18px;border:none;border-radius:8px;cursor:pointer;font-size:14px;text-decoration:none}
     .btn-print{background:#2563eb;color:#fff}.btn-back{background:#e2e8f0;color:#1e293b}
     .clinic svg{width:.95em;height:.95em;vertical-align:-.12em}
-    .stamp svg{width:1em;height:1em;vertical-align:-.14em}
     .actions svg{width:16px;height:16px;vertical-align:-3px}
     @media print{body{background:#fff;padding:0}.actions{display:none}.paper{box-shadow:none;width:100%}}
-    <?php if (!empty($_GET['copy'])): ?>
-    .paper { position: relative; overflow: hidden; }
-    .paper::before {
-      content: "COPY";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 160px;
-      color: rgba(150, 150, 150, 0.15);
-      font-weight: 900;
-      letter-spacing: 20px;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .head, .meta, .items, .sum, .says, .pay, .bank, .signdate, .foot, .actions { position: relative; z-index: 1; }
-    <?php endif; ?>
   </style>
 </head>
 <body>
   <div class="paper">
     <div class="head">
-      <div class="title">RECEIPT</div>
+      <div class="title">INVOICE</div>
       <div class="clinic"><?= app_icon('hospital') ?> <?= CLINIC_NAME ?></div>
       <div class="unit"><?= defined('CLINIC_UNIT') ? CLINIC_UNIT : '' ?></div>
     </div>
 
     <div class="meta">
       <table>
-        <tr><td class="k">Payment Date</td><td>: <?= $tglDate($inv['tanggal']) ?></td></tr>
-        <tr><td class="k">Reference</td><td>: <?= e(strtoupper($inv['poli'])) ?></td></tr>
+        <tr><td class="k">Reference</td><td>: <?= e(strtoupper($kj['poli'])) ?></td></tr>
         <tr><td colspan="2"><?= $hasConsult ? 'CONSULTATION' : 'NO CONSULTATION' ?></td></tr>
-        <tr><td class="k">No. MR</td><td>: <?= e($inv['no_mr']) ?></td></tr>
+        <tr><td class="k">No. MR</td><td>: <?= e($kj['no_mr']) ?></td></tr>
         <tr><td colspan="2">Page 1 of 1</td></tr>
       </table>
       <table>
         <tr><td class="k">No. Invoice</td><td>: <?= e($inv['no_invoice']) ?></td></tr>
         <tr><td class="k">Print Date</td><td>: <?= $tglDate(date('Y-m-d')) ?></td></tr>
-        <tr><td class="k">Admission Date</td><td>: <?= $tglDate($inv['admission']) ?></td></tr>
-        <tr><td class="k">Discharge Date</td><td>: <?= $tglDate($inv['tgl_kunjungan']) ?></td></tr>
-        <tr><td class="k">Name</td><td>: <?= e($inv['pasien']) ?></td></tr>
+        <tr><td class="k">Admission Date</td><td>: <?= $tglDate($kj['created_at']) ?></td></tr>
+        <tr><td class="k">Name</td><td>: <?= e($kj['pasien']) ?></td></tr>
       </table>
     </div>
 
@@ -162,7 +123,7 @@ $penjaminLabel = (function () use ($inv) {
           <tr class="grp"><td colspan="2"></td><td colspan="3"><?= e($grup) ?></td></tr>
           <?php foreach ($grouped[$grup] as $d): ?>
             <tr>
-              <td><?= $tglDate($inv['tgl_kunjungan']) ?></td>
+              <td><?= $tglDate($kj['tgl_kunjungan']) ?></td>
               <td><?= e($d['item_code'] ?? '') ?></td>
               <td><?= e($d['deskripsi']) ?></td>
               <td><?= (int) $d['qty'] ?></td>
@@ -178,29 +139,11 @@ $penjaminLabel = (function () use ($inv) {
 
     <div class="sum">
       <div><span class="lbl">TOTAL</span><span class="cur">: Rp</span><span class="val"><?= $amt($billing['subtotal']) ?></span></div>
-      <div><span class="lbl">DOWN PAYMENT</span><span class="cur">: Rp</span><span class="val"></span></div>
       <div><span class="lbl">DISCOUNT</span><span class="cur">: Rp</span><span class="val"><?= $amt($billing['diskon']) ?></span></div>
       <div class="net"><span class="lbl">NET PAYABLE</span><span class="cur">Rp</span><span class="val"><?= $amt($inv['total']) ?></span></div>
     </div>
 
     <div class="says"><b>Says</b> : <?= e(terbilang_en_rupiah($inv['total'])) ?></div>
-
-    <div class="pay">
-      <?php foreach ($pmts as $pm): ?>
-        <div class="payline">
-          <?php if ($pm['metode'] === 'penjamin'): ?>
-            <span><?= e($codePrefix) ?> - <?= e(strtoupper($penjaminLabel)) ?></span>
-          <?php else: ?>
-            <span><?= e($codePrefix) ?> - <?= e(strtoupper(metode_label($pm['metode']))) ?><?= $bank ? ' ' . e(strtoupper($signPlace)) : '' ?></span>
-          <?php endif; ?>
-          <span><?= $amt($pm['jumlah']) ?></span>
-        </div>
-      <?php endforeach; ?>
-      <?php if ($sisa > 0): ?>
-        <div class="payline"><span>SISA</span><span><?= $amt($sisa) ?></span></div>
-        <span class="stamp red">BELUM LUNAS</span>
-      <?php endif; ?>
-    </div>
 
     <?php if ($bank): ?>
     <div class="bank">
@@ -210,13 +153,10 @@ $penjaminLabel = (function () use ($inv) {
     </div>
     <?php endif; ?>
 
-    <div class="signdate"><?= e(strtoupper($signPlace)) ?> , <?= $tglDate($inv['tanggal']) ?></div>
-
-    <div class="foot">* Payment is deemed valid if receipt sealed by the cashier is issued</div>
+    <div class="signdate"><?= e(strtoupper($signPlace)) ?> , <?= $tglDate(date('Y-m-d')) ?></div>
 
     <div class="actions">
-      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> <?= e(t('common.print')) ?></button>
-      <a class="btn-back" href="<?= legacy_url('modules/keuangan/index.php') ?>">Selesai</a>
+      <button class="btn-print" onclick="window.print()"><?= app_icon('print') ?> Cetak Invoice</button>
     </div>
   </div>
 </body>

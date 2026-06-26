@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../includes/header.php';
 <div class="table-wrap">
   <table class="datatable dt-noscroll no-auto-num" style="width:100%">
     <thead>
-      <tr><th><?= e(t('common.mr_no')) ?></th><th><?= e(t('common.name')) ?></th><th><?= e(t('common.gender')) ?></th><th><?= e(t('common.birth_date')) ?></th><th><?= e(t('common.phone')) ?></th>
+      <tr><th><?= e(t('common.mr_no')) ?></th><th><?= e(t('common.name')) ?></th><th><?= e(t('common.gender')) ?></th><th><?= e(t('common.birth_date')) ?></th>
           <th><?= e(t('common.group')) ?></th><th class="no-sort col-actions col-actions-wide"><?= e(t('common.action')) ?></th></tr>
     </thead>
     <tbody>
@@ -33,7 +33,7 @@ require_once __DIR__ . '/../../includes/header.php';
           <td><?= e($p['nama']) ?><?php if ($p['nik']): ?><br><small style="color:var(--muted)">NIK: <?= e($p['nik']) ?></small><?php endif; ?></td>
           <td><?= $p['jenis_kelamin'] === 'L' ? 'L' : 'P' ?></td>
           <td><?= tgl_id($p['tgl_lahir']) ?></td>
-          <td><?= e($p['telepon'] ?? '-') ?></td>
+
           <td><?= e($p['kelompok'] ?? '-') ?></td>
           <td class="cell-actions cell-actions-wide">
             <div class="cell-actions-inner">

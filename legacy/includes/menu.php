@@ -26,14 +26,6 @@ function get_menu(): array
              'roles' => $opsRoles, 'match' => 'registrasi/daftar'],
             ['ico' => 'users', 'label' => t('menu.patient_data'), 'url' => 'modules/registrasi/pasien.php',
              'roles' => $opsRoles, 'match' => 'registrasi/pasien'],
-            ['ico' => 'ticket', 'label' => t('menu.queue_board'), 'url' => 'modules/registrasi/antrian.php',
-             'roles' => ['superadmin', 'registrasi'], 'match' => 'registrasi/antrian'],
-            ['ico' => 'pelayanan', 'label' => t('menu.service'), 'url' => 'modules/pelayanan/index.php',
-             'roles' => ['dokter', 'farmasi'],
-             'children' => [
-                 ['label' => t('menu.exam_queue'), 'url' => 'modules/pelayanan/index.php', 'roles' => ['dokter']],
-                 ['label' => t('menu.pharmacy_queue'), 'url' => 'modules/pelayanan/farmasi.php', 'roles' => ['farmasi']],
-             ]],
         ]],
         ['grup' => t('menu.groups.keuangan'), 'items' => [
             ['ico' => 'billing', 'label' => t('menu.billing'), 'url' => 'modules/billing/index.php',

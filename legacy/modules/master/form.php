@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $v = $data[$key];
             if ($f['type'] === 'fk') {
                 $v = ($v === '' ? null : (int) $v);
-            } elseif (in_array($f['type'], ['number', 'money'], true)) {
+            } elseif (in_array($f['type'], ['number', 'money', 'percent'], true)) {
                 $v = ($v === '' ? 0 : (float) $v);
             } elseif ($v === '') {
                 $v = null;
@@ -156,6 +156,13 @@ if (!$modal):
             <span class="cur">Rp</span>
             <input type="number" class="form-control" name="<?= $key ?>" value="<?= e($val) ?>"
                    step="any" min="0" <?= !empty($f['required']) ? 'required' : '' ?>>
+          </div>
+
+        <?php elseif ($f['type'] === 'percent'): ?>
+          <div style="display:flex; align-items:center; gap:8px">
+            <input type="number" class="form-control" name="<?= $key ?>" value="<?= e($val) ?>"
+                   step="any" min="0" <?= !empty($f['required']) ? 'required' : '' ?>>
+            <span style="font-weight:bold; color:var(--muted)">%</span>
           </div>
 
         <?php elseif ($f['type'] === 'number'): ?>

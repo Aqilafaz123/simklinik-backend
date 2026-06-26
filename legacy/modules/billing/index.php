@@ -54,13 +54,14 @@ require_once __DIR__ . '/../../includes/header.php';
           <td style="text-align:right"><?= $r['billing_total'] !== null ? rupiah($r['billing_total']) : '<span style="color:var(--muted)">' . e(t('common.not_yet')) . '</span>' ?></td>
           <td class="cell-actions"><div class="cell-actions-inner"><?php if ($r['status'] === 'billing'): ?>
             <a class="btn btn-sm" href="<?= legacy_url('modules/billing/proses.php?kunjungan_id=' . $r['id']) ?>"><?= app_icon('billing') ?> <?= e(t('common.create_billing')) ?></a>
-            <button type="button" class="btn btn-sm btn-danger" data-batal-kunjungan="<?= (int) $r['id'] ?>" data-batal-label="<?= e($r['pasien'] . ' — ' . $r['no_kunjungan']) ?>"><?= app_icon('close') ?> <?= e(t('common.cancel_short')) ?></button>
-          <?php else: ?>
+            <button type="button" class="btn btn-sm btn-danger" data-batal-kunjungan="<?= (int) $r['id'] ?>" data-batal-label="<?= e($r['pasien'] . ' — ' . $r['no_kunjungan']) ?>"><?= app_icon('close') ?> <?= e(t('common.cancel_short')) ?></button>
+            <?php else: ?>
+            <a class="btn btn-sm btn-light" target="_blank" href="<?= legacy_url('modules/billing/cetak_invoice.php?kunjungan_id=' . $r['id']) ?>" title="Cetak Invoice"><?= app_icon('print') ?></a>
             <a class="btn btn-sm btn-light" href="<?= legacy_url('modules/billing/detail.php?kunjungan_id=' . $r['id']) ?>"
                data-modal-url="<?= legacy_url('modules/billing/detail.php?kunjungan_id=' . $r['id'] . '&modal=1') ?>"
                data-modal-title="<?= e(t('common.billing_detail')) ?>"><?= app_icon('eye') ?> <?= e(t('common.view_detail')) ?></a>
             <?php if ($r['status'] === 'pembayaran'): ?>
-            <button type="button" class="btn btn-sm btn-danger" data-batal-kunjungan="<?= (int) $r['id'] ?>" data-batal-label="<?= e($r['pasien'] . ' — ' . $r['no_kunjungan']) ?>"><?= app_icon('close') ?> <?= e(t('common.cancel_short')) ?></button>
+            <button type="button" class="btn btn-sm btn-danger" data-batal-kunjungan="<?= (int) $r['id'] ?>" data-batal-label="<?= e($r['pasien'] . ' — ' . $r['no_kunjungan']) ?>"><?= app_icon('close') ?> <?= e(t('common.cancel_short')) ?></button>
             <?php endif; ?>
           <?php endif; ?></div></td>
         </tr>

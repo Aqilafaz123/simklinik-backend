@@ -14,7 +14,7 @@ function laporan_list(): array
             'label' => 'Laporan Kunjungan', 'icon' => app_icon('users'), 'group' => 'Operasional',
             'roles' => ['registrasi', 'dokter', 'kasir'],
             'sql' => "SELECT k.tgl_kunjungan AS tanggal, k.no_kunjungan, p.no_mr, p.nama AS pasien,
-                        po.nama AS poli, d.nama AS dokter, k.jenis_penjamin AS penjamin, k.status
+                        po.nama AS poli, d.nama AS dokter, k.jenis_penjamin AS penjamin, k.status, k.id AS action_periksa
                       FROM kunjungan k JOIN pasien p ON p.id=k.pasien_id JOIN poli po ON po.id=k.poli_id
                       LEFT JOIN dokter d ON d.id=k.dokter_id
                       WHERE k.tgl_kunjungan BETWEEN :dari AND :sampai
@@ -24,6 +24,7 @@ function laporan_list(): array
                 'no_mr' => ['No. MR', 'text'], 'pasien' => ['Pasien', 'text'],
                 'dokter' => ['Dokter', 'text'],
                 'penjamin' => ['Penjamin', 'upper'], 'status' => ['Status', 'status'],
+                'action_periksa' => ['Aksi', 'action_periksa'],
             ], 'sum' => [],
         ],
         'pendapatan' => [
@@ -197,6 +198,7 @@ function laporan_cell_html($val, string $type): string
         case 'metode':   return e(metode_label((string) $val));
         case 'upper':    return e(strtoupper((string) $val));
         case 'status':   return '<span class="badge badge-gray">' . e(ucwords(str_replace('_', ' ', (string) $val))) . '</span>';
+        case 'action_periksa': return '<a href="' . legacy_url('modules/laporan/kunjungan_detail.php?id=' . $val) . '" class="btn btn-sm">' . app_icon('pelayanan') . ' Periksa</a>';
         default:         return e((string) $val);
     }
 }
@@ -211,6 +213,7 @@ function laporan_cell_csv($val, string $type): string
         case 'datetime': return $val ? date('Y-m-d H:i', strtotime($val)) : '';
         case 'metode':   return metode_label((string) $val);
         case 'upper':    return strtoupper((string) $val);
+        case 'action_periksa': return '';
         default:         return (string) $val;
     }
 }

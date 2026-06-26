@@ -10,10 +10,9 @@ class SimKlinikMasterSeeder extends Seeder
     public function run(): void
     {
         DB::table('kelompok_pasien')->insert([
-            ['nama' => 'Umum'],
-            ['nama' => 'BPJS'],
+            ['nama' => 'Umum/Cash'],
             ['nama' => 'Asuransi'],
-            ['nama' => 'Corporate'],
+            ['nama' => 'Perusahaan'],
         ]);
 
         DB::table('poli')->insert([
@@ -91,10 +90,10 @@ class SimKlinikMasterSeeder extends Seeder
         ]);
 
         DB::table('obat')->insert([
-            ['kode' => 'GBFA0001', 'nama' => 'Paracetamol 500mg', 'kategori_id' => 1, 'satuan_id' => 1, 'harga_beli' => 300, 'harga_jual' => 500, 'stok' => 500, 'stok_minimal' => 50, 'status' => 'aktif'],
-            ['kode' => 'GBFA0002', 'nama' => 'Amoxicillin 500mg', 'kategori_id' => 2, 'satuan_id' => 2, 'harga_beli' => 800, 'harga_jual' => 1200, 'stok' => 300, 'stok_minimal' => 40, 'status' => 'aktif'],
-            ['kode' => 'GBFA0003', 'nama' => 'Vitamin C 50mg', 'kategori_id' => 3, 'satuan_id' => 1, 'harga_beli' => 200, 'harga_jual' => 400, 'stok' => 400, 'stok_minimal' => 50, 'status' => 'aktif'],
-            ['kode' => 'GBFA0004', 'nama' => 'Antasida Syrup', 'kategori_id' => 1, 'satuan_id' => 3, 'harga_beli' => 5000, 'harga_jual' => 8000, 'stok' => 60, 'stok_minimal' => 10, 'status' => 'aktif'],
+            ['kode' => 'GBFA0001', 'nama' => 'Paracetamol 500mg', 'kategori_id' => 1, 'satuan_id' => 1, 'harga_beli' => 300, 'markup_persen' => 50, 'stok' => 500, 'stok_minimal' => 50, 'status' => 'aktif'],
+            ['kode' => 'GBFA0002', 'nama' => 'Amoxicillin 500mg', 'kategori_id' => 2, 'satuan_id' => 2, 'harga_beli' => 800, 'markup_persen' => 50, 'stok' => 300, 'stok_minimal' => 40, 'status' => 'aktif'],
+            ['kode' => 'GBFA0003', 'nama' => 'Vitamin C 50mg', 'kategori_id' => 3, 'satuan_id' => 1, 'harga_beli' => 200, 'markup_persen' => 100, 'stok' => 400, 'stok_minimal' => 50, 'status' => 'aktif'],
+            ['kode' => 'GBFA0004', 'nama' => 'Antasida Syrup', 'kategori_id' => 1, 'satuan_id' => 3, 'harga_beli' => 5000, 'markup_persen' => 60, 'stok' => 60, 'stok_minimal' => 10, 'status' => 'aktif'],
         ]);
 
         DB::table('setting')->insert([

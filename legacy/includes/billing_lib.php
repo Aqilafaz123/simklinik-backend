@@ -45,28 +45,36 @@ function collect_billing_lines(int $kunjunganId): array
 
     // 3) Laboratorium (item_code = kode pemeriksaan lab)
     $s = db()->prepare(
-        "SELECT lp.kode, lp.nama, lod.tarif, lod.qty, lod.subtotal FROM lab_order_detail lod
+        "SELECT lp.kode, lp.nama, lod.qty, lp.tarif AS base_tarif, lp.markup_persen FROM lab_order_detail lod
          JOIN lab_order lo ON lo.id = lod.lab_order_id
          JOIN lab_pemeriksaan lp ON lp.id = lod.pemeriksaan_id
          WHERE lo.kunjungan_id = ?");
     $s->execute([$kunjunganId]);
     foreach ($s->fetchAll() as $r) {
+        $base = (float) $r['base_tarif'];
+        $markup = (float) ($r['markup_persen'] ?? 0);
+        $calcTarif = $base + ($base * $markup / 100);
+        $qty = (int) $r['qty'];
         $lines[] = ['kategori' => 'laboratorium', 'item_code' => $r['kode'],
             'deskripsi' => $r['nama'],
-            'qty' => (int) $r['qty'], 'tarif' => (float) $r['tarif'], 'subtotal' => (float) $r['subtotal']];
+            'qty' => $qty, 'tarif' => $calcTarif, 'subtotal' => $calcTarif * $qty];
     }
 
     // 4) Radiologi (item_code = kode pemeriksaan radiologi)
     $s = db()->prepare(
-        "SELECT rp.kode, rp.nama, rod.tarif, rod.qty, rod.subtotal FROM rad_order_detail rod
+        "SELECT rp.kode, rp.nama, rod.qty, rp.tarif AS base_tarif, rp.markup_persen FROM rad_order_detail rod
          JOIN rad_order ro ON ro.id = rod.rad_order_id
          JOIN rad_pemeriksaan rp ON rp.id = rod.pemeriksaan_id
          WHERE ro.kunjungan_id = ?");
     $s->execute([$kunjunganId]);
     foreach ($s->fetchAll() as $r) {
+        $base = (float) $r['base_tarif'];
+        $markup = (float) ($r['markup_persen'] ?? 0);
+        $calcTarif = $base + ($base * $markup / 100);
+        $qty = (int) $r['qty'];
         $lines[] = ['kategori' => 'radiologi', 'item_code' => $r['kode'],
             'deskripsi' => $r['nama'],
-            'qty' => (int) $r['qty'], 'tarif' => (float) $r['tarif'], 'subtotal' => (float) $r['subtotal']];
+            'qty' => $qty, 'tarif' => $calcTarif, 'subtotal' => $calcTarif * $qty];
     }
 
     // 4b) Diagnostik (item_code = kode pemeriksaan diagnostik)
@@ -97,15 +105,19 @@ function collect_billing_lines(int $kunjunganId): array
 
     // 5) Farmasi / obat (item_code = kode obat)
     $s = db()->prepare(
-        "SELECT o.kode, o.nama, rd.qty, rd.harga, rd.subtotal FROM resep_detail rd
+        "SELECT o.kode, o.nama, rd.qty, o.harga_beli, o.markup_persen FROM resep_detail rd
          JOIN resep r ON r.id = rd.resep_id
          JOIN obat o ON o.id = rd.obat_id
          WHERE r.kunjungan_id = ?");
     $s->execute([$kunjunganId]);
     foreach ($s->fetchAll() as $r) {
+        $base = (float) $r['harga_beli'];
+        $markup = (float) ($r['markup_persen'] ?? 0);
+        $calcTarif = $base + ($base * $markup / 100);
+        $qty = (int) $r['qty'];
         $lines[] = ['kategori' => 'farmasi', 'item_code' => $r['kode'],
             'deskripsi' => $r['nama'],
-            'qty' => (int) $r['qty'], 'tarif' => (float) $r['harga'], 'subtotal' => (float) $r['subtotal']];
+            'qty' => $qty, 'tarif' => $calcTarif, 'subtotal' => $calcTarif * $qty];
     }
 
     return $lines;

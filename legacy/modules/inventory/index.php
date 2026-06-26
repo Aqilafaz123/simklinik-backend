@@ -57,7 +57,7 @@ require_once __DIR__ . '/../../includes/header.php';
           <td style="text-align:center"><b><?= (int) $o['stok'] ?></b> <?= e($o['satuan'] ?? '') ?></td>
           <td style="text-align:center"><?= (int) $o['stok_minimal'] ?></td>
           <td style="text-align:right"><?= rupiah($o['harga_beli']) ?></td>
-          <td style="text-align:right"><?= rupiah($o['harga_jual']) ?></td>
+          <td style="text-align:right"><?= rupiah($o['harga_beli'] + ($o['harga_beli'] * ($o['markup_persen'] ?? 0) / 100)) ?></td>
           <td style="text-align:center"><span class="badge <?= $low ? 'badge-red' : 'badge-green' ?>"><?= $low ? e(t('common.stock_low')) : e(t('common.stock_ok')) ?></span></td>
           <td class="cell-actions"><div class="cell-actions-inner"><a class="btn btn-sm btn-light" href="<?= legacy_url('modules/inventory/kartu_stok.php?obat_id=' . $o['id']) ?>"><?= e(t('common.stock_card')) ?></a></div></td>
         </tr>

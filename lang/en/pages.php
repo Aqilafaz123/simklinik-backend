@@ -14,7 +14,7 @@ return [
     'medical_records_patients' => 'Patient Medical Records',
     'medical_record_detail' => 'Medical Record Detail',
     'registration' => 'Registration',
-    'registration_visits' => 'Visit Registration',
+    'registration_visits' => 'Patient Registration',
     'new_registration' => 'New Visit Registration',
     'visit_list' => 'Visit List',
     'patient_data' => 'Patient Data',

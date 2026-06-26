@@ -57,7 +57,7 @@ require_once __DIR__ . '/../../includes/header.php';
           <td><?= e($r['dokter'] ?? '-') ?></td>
           <td><span class="badge badge-gray"><?= e(strtoupper($r['jenis_penjamin'])) ?></span></td>
           <td><span class="badge <?= $badgeMap[$r['status']] ?? 'badge-gray' ?>"><?= e(status_label($r['status'])) ?></span></td>
-          <td class="cell-actions"><div class="cell-actions-inner"><a class="btn btn-sm btn-light" href="<?= legacy_url('modules/registrasi/cetak_antrian.php?id=' . $r['id']) ?>" target="_blank"><?= app_icon('print') ?> <?= e(t('common.card')) ?></a></div></td>
+          <td class="cell-actions"></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

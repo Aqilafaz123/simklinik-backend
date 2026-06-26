@@ -148,7 +148,10 @@ require_once __DIR__ . '/../../includes/header.php';
         <div class="val"><?= rupiah($sisa) ?></div>
       </div>
       <?php if ($isLunas): ?>
-        <a class="btn btn-green" target="_blank" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $invoice['id']) ?>"><?= app_icon("print") ?> <?= e(t('common.print_receipt')) ?></a>
+        <div style="display:flex; gap:10px; margin-top:14px;">
+          <a class="btn btn-green" target="_blank" style="flex:1;justify-content:center" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $invoice['id']) ?>"><?= app_icon("print") ?> <?= e(t('common.print_receipt')) ?></a>
+          <a class="btn btn-light" target="_blank" style="flex:1;justify-content:center;border:1px solid #cbd5e1" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $invoice['id'] . '&copy=1') ?>">Cetak Copy</a>
+        </div>
       <?php endif; ?>
     </div>
 

@@ -14,7 +14,7 @@ return [
     'medical_records_patients' => 'Rekam Medis Pasien',
     'medical_record_detail' => 'Detail Rekam Medis',
     'registration' => 'Registrasi',
-    'registration_visits' => 'Registrasi Kunjungan',
+    'registration_visits' => 'Registrasi Pasien',
     'new_registration' => 'Pendaftaran Kunjungan',
     'visit_list' => 'Daftar Kunjungan',
     'patient_data' => 'Data Pasien',

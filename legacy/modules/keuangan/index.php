@@ -70,8 +70,10 @@ require_once __DIR__ . '/../../includes/header.php';
           <td style="text-align:center;"><span class="badge <?= $invBadge[$r['inv_status'] ?? 'belum_bayar'] ?? 'badge-gray' ?>">
               <?= e(payment_status_label($r['inv_status'] ?? 'belum_bayar')) ?></span></td>
           <td class="cell-actions"><div class="cell-actions-inner">
+            <?php if ($r['invoice_id'] && ($r['inv_status'] ?? '') === 'lunas'): ?>
+              <a class="btn btn-sm btn-light btn-icon" target="_blank" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $r['invoice_id']) ?>" title="<?= e(t('common.print_receipt_title')) ?>"><?= app_icon('print') ?></a>
+            <?php endif; ?>
             <a class="btn btn-sm" href="<?= legacy_url('modules/keuangan/bayar.php?kunjungan_id=' . $r['id']) ?>"><?= ($r['inv_status'] ?? '') === 'lunas' ? e(t('common.view')) : app_icon('money') . ' ' . e(t('common.pay')) ?></a>
-            <?php if ($r['invoice_id']): ?><a class="btn btn-sm btn-light btn-icon" target="_blank" href="<?= legacy_url('modules/keuangan/struk.php?invoice_id=' . $r['invoice_id']) ?>" title="<?= e(t('common.print_receipt_title')) ?>"><?= app_icon('print') ?></a><?php endif; ?>
           </div></td>
         </tr>
       <?php endforeach; ?>

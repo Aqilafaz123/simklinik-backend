@@ -27,7 +27,7 @@ $umur = $p['tgl_lahir'] ? (int) ((time() - strtotime($p['tgl_lahir'])) / 3155695
 $sections = [
     ['Identitas Pasien', 'user', 'acc-blue', [
         'nik'             => 'NIK',
-        'no_kk'           => 'No. Kartu Keluarga',
+        'no_passport'     => 'No. Passport/Kitas',
         'nama_ibu'        => 'Nama Ibu Kandung',
         'tempat_lahir'    => 'Tempat Lahir',
         'tgl_lahir'       => 'Tanggal Lahir',
@@ -38,19 +38,18 @@ $sections = [
         'pendidikan'      => 'Pendidikan',
         'kewarganegaraan' => 'Kewarganegaraan',
     ]],
-    ['Alamat & Kontak', 'idcard', 'acc-green', [
-        'alamat'    => ['Alamat', 'full'],
-        'rt_rw'     => 'RT / RW',
-        'kode_pos'  => 'Kode Pos',
-        'kelurahan' => 'Kelurahan / Desa',
-        'kecamatan' => 'Kecamatan',
-        'kota'      => 'Kota / Kabupaten',
-        'provinsi'  => 'Provinsi',
-        'telepon'   => 'Telepon / HP',
-        'email'     => 'Email',
+    ['Alamat & Kontak', 'map-pin', 'acc-green', [
+        'alamat'     => ['Alamat Lengkap', 'full'],
+        'kode_pos'   => 'Kode Pos',
+        'kelurahan'  => 'Kelurahan/Desa',
+        'kecamatan'  => 'Kecamatan',
+        'kota'       => 'Kota/Kabupaten',
+        'provinsi'   => 'Provinsi',
+        'telepon'    => 'Telepon/HP',
+        'email'      => 'Email',
     ]],
     ['Penjamin & Pekerjaan', 'shield', 'acc-orange', [
-        'kelompok'    => 'Kelompok Pasien',
+        'kelompok'    => 'Jaminan',
         'no_asuransi' => 'No. Asuransi',
         'pekerjaan'   => 'Pekerjaan',
     ]],
@@ -85,10 +84,9 @@ ob_start();
         &middot; <?= e($umur) ?> &middot; <?= e($p['kelompok'] ?? 'Umum') ?>
       </div>
       <div style="color:var(--muted)">
-        <?= $p['tgl_lahir'] ? tgl_id($p['tgl_lahir']) : '-' ?> &middot; <?= e($p['telepon'] ?? '-') ?>
+        <?= $p['tgl_lahir'] ? tgl_id($p['tgl_lahir']) : '-' ?>
         <?php if ($p['gol_darah'] && $p['gol_darah'] !== '-'): ?> &middot; Gol. Darah <?= e($p['gol_darah']) ?><?php endif; ?>
       </div>
-      <?php if (!empty($p['alamat'])): ?><div style="color:var(--muted)"><?= e($p['alamat']) ?></div><?php endif; ?>
     </div>
     <div style="text-align:right">
       <?php if (!empty($p['alergi'])): ?><span class="badge badge-red"><?= app_icon('alert') ?> Alergi: <?= e($p['alergi']) ?></span><?php endif; ?>

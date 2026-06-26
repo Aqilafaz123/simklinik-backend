@@ -140,11 +140,11 @@ require_once __DIR__ . '/../../includes/header.php';
   </table>
 </div>
 
-<form method="post" style="margin-top:18px">
+<div class="card" style="max-width:460px;margin-left:auto;margin-top:18px">
+<form method="post">
   <?= sim_csrf_field() ?>
   <input type="hidden" name="kunjungan_id" value="<?= (int) $kunjunganId ?>">
   <input type="hidden" name="aksi" id="aksi" value="simpan">
-  <div class="card" style="max-width:460px;margin-left:auto">
     <div style="display:flex;justify-content:space-between;padding:6px 0">
       <span><?= e(t('common.service_subtotal')) ?></span><b><?= rupiah($svcOnly) ?></b>
     </div>
@@ -170,6 +170,7 @@ require_once __DIR__ . '/../../includes/header.php';
     <?php else: ?>
       <a class="btn" style="margin-top:14px;width:100%;justify-content:center" href="<?= legacy_url('modules/keuangan/index.php') ?>"><?= app_icon("keuangan") ?> <?= e(t('common.continue_to_payment')) ?></a>
     <?php endif; ?>
+</form>
     <?php if (!$isFinal && $kj['status'] !== 'selesai'): ?>
     <details style="margin-top:18px;border-top:1px solid var(--border);padding-top:14px">
       <summary style="cursor:pointer;color:var(--danger);font-weight:600"><?= e(t('common.cancel_billing')) ?></summary>
@@ -195,7 +196,6 @@ require_once __DIR__ . '/../../includes/header.php';
     </details>
     <?php endif; ?>
   </div>
-</form>
 
 <script>
 var svcTotal = <?= (float) $svcOnly ?>;

@@ -20,9 +20,9 @@ if (!$kj) { set_flash('danger', 'Kunjungan tidak ditemukan.'); legacy_redirect('
 
 // Master untuk pilihan
 $mTindakan = db()->query("SELECT id,nama,tarif FROM tindakan WHERE status='aktif' ORDER BY nama")->fetchAll();
-$mObat     = db()->query("SELECT id,nama,harga_jual,stok FROM obat WHERE status='aktif' ORDER BY nama")->fetchAll();
-$mLab      = db()->query("SELECT id,nama,nilai_rujukan,tarif FROM lab_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
-$mRad      = db()->query("SELECT id,nama,tarif FROM rad_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
+$mObat     = db()->query("SELECT id,nama,harga_beli,markup_persen,stok FROM obat WHERE status='aktif' ORDER BY nama")->fetchAll();
+$mLab      = db()->query("SELECT id,nama,nilai_rujukan,tarif,markup_persen FROM lab_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
+$mRad      = db()->query("SELECT id,nama,tarif,markup_persen FROM rad_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
 $mDiag     = db()->query("SELECT id,nama,tarif FROM diag_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
 $mFisio    = db()->query("SELECT id,nama,tarif FROM fisio_pemeriksaan WHERE status='aktif' ORDER BY nama")->fetchAll();
 
@@ -93,7 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $labMap = []; foreach ($mLab as $l) $labMap[$l['id']] = $l;
             foreach ($labPick as $pid) {
                 $pid = (int) $pid; if (!isset($labMap[$pid])) continue;
-                $qty = max(1, (int) ($labQtyIn[$pid] ?? 1)); $tarif = (float) $labMap[$pid]['tarif'];
+                $qty = max(1, (int) ($labQtyIn[$pid] ?? 1)); 
+                $base = (float) $labMap[$pid]['tarif'];
+                $markup = (float) ($labMap[$pid]['markup_persen'] ?? 0);
+                $tarif = $base + ($base * $markup / 100);
                 $insLab->execute([$labOrderId, $pid, trim($labHasil[$pid] ?? '') ?: null,
                     $labMap[$pid]['nilai_rujukan'], $tarif, $qty, $tarif * $qty]);
             }
@@ -110,7 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $radMap = []; foreach ($mRad as $r) $radMap[$r['id']] = $r;
             foreach ($radPick as $pid) {
                 $pid = (int) $pid; if (!isset($radMap[$pid])) continue;
-                $qty = max(1, (int) ($radQtyIn[$pid] ?? 1)); $tarif = (float) $radMap[$pid]['tarif'];
+                $qty = max(1, (int) ($radQtyIn[$pid] ?? 1)); 
+                $base = (float) $radMap[$pid]['tarif'];
+                $markup = (float) ($radMap[$pid]['markup_persen'] ?? 0);
+                $tarif = $base + ($base * $markup / 100);
                 $insRad->execute([$radOrderId, $pid, trim($radHasil[$pid] ?? '') ?: null, $tarif, $qty, $tarif * $qty]);
             }
         }
@@ -166,7 +172,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $insResep = db()->prepare("INSERT INTO resep_detail (resep_id,obat_id,qty,dosis,aturan_pakai,harga,subtotal) VALUES (?,?,?,?,?,?,?)");
             foreach ($validObat as $v) {
                 [$oid, $qty, $dosis, $aturan] = $v;
-                $harga = (float) $obatMap[$oid]['harga_jual'];
+                $base = (float) $obatMap[$oid]['harga_beli'];
+                $markup = (float) ($obatMap[$oid]['markup_persen'] ?? 0);
+                $harga = $base + ($base * $markup / 100);
                 $insResep->execute([$resepId, $oid, $qty, $dosis ?: null, $aturan ?: null, $harga, $harga * $qty]);
                 $jmlResep++;
             }
